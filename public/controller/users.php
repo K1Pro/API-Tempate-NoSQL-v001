@@ -16,28 +16,15 @@
     //     exit;
     // }
 
-    // handle options request method for CORS VVVVVV
-    // if($_SERVER['REQUEST_METHOD'] === 'POST'){
-        header('Access-Control-Allow-Headers: *');
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: *');
-        header('Access-Control-Max-Age: 86400');
-        // $response = new Response();
-        // $response->setHttpStatusCode(200);
-        // $response->setSuccess(true);
-        // $response->send();
-        // exit;
+    // if($_SERVER['REQUEST_METHOD'] !== 'POST'){
+    //     $response = new Response();
+    //     $response->setHttpStatusCode(405);
+    //     $response->setSuccess(false);
+    //     $response->addMessage('Request method not allowed');
+    //     $response->send();
+    //     exit;
     // }
-    // handle options request method for CORS ^^^^^^
-
-    if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-        $response = new Response();
-        $response->setHttpStatusCode(405);
-        $response->setSuccess(false);
-        $response->addMessage('Request method not allowed');
-        $response->send();
-        exit;
-    }
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if($_SERVER['CONTENT_TYPE'] !== 'application/json'){
         $response = new Response();
@@ -87,18 +74,51 @@
     
     $fullname = trim($jsonData->fullname);
     $username = trim($jsonData->username);
+    $email = trim($jsonData->email);
     $password = $jsonData->password;
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
     $date = new DateTime();
 
-    $user = [
-        "username" => $fullname,
-        "email" => $username,
-        "activity" => [
-          "logon" => $date->format('Y-m-d\TH:i:sO'),
-          "create" => $date->format('Y-m-d\TH:i:sO')
-        ]
-       ];
-    $results = $userStore->insert($user);
+    try{
+        $userinfo = [
+            "fullname" => $fullname,
+            "username" => $username,
+            "password" => $hashed_password,
+            "email" => $email,
+            "activity" => [
+              "created" => $date->format('Y-m-d\TH:i:sO')
+            ]
+           ];
+           
+        
+        if($results = $userStore->insert($userinfo)) {
+
+            $returnData = array();
+            $returnData['fullname'] = $fullname;
+            $returnData['username'] = $username;
+            $returnData['email'] = $email;
+
+            $response = new Response();
+            $response->setHttpStatusCode(201);
+            $response->setSuccess(true);
+            $response->addMessage('User Created');
+            $response->setData($returnData);
+            $response->send();
+            exit;
+        }
+
+    }
+    catch(Exception $ex) {
+        error_log('Database query error: '.$ex, 0);
+        $response = new Response();
+        $response->setHttpStatusCode(500);
+        $response->setSuccess(false);
+        $response->addMessage('There was an issue creating a user account - please try again');
+        $response->send();
+        exit;
+    }
+
+
 
     // try {
     //     $query = $writeDB->prepare('select id from tblusers where username = :username');
@@ -161,5 +181,43 @@
     //     $response->send();
     //     exit;
     // }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    if(empty($_GET)){
+        if($allusers = $userStore->findAll())if(empty($_GET)){{
+            if($userStore->deleteById($userid)){
+                $returnData = array();
+                $returnData['users'] = $userStore;
+
+                $response = new Response();
+                $response->setHttpStatusCode(200);
+                $response->setSuccess(true);
+                $response->addMessage("All users retrieved");
+                $response->setData($returnData);
+                $response->send();
+                exit;
+            }
+        }
+    }
+
+
+} elseif ($_SERVER['REQUEST_METHOD'] === 'PATCH') {
+
+
+} elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+
+    if(array_key_exists('userid',$_GET)) {
+
+        $userid = $_GET['userid'];
+
+        if($userStore->deleteById($userid)){
+            $response = new Response();
+            $response->setHttpStatusCode(200);
+            $response->setSuccess(true);
+            $response->addMessage("Task deleted");
+            $response->send();
+            exit;
+        }
+    }
+}
 
 ?>
