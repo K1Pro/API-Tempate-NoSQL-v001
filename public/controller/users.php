@@ -183,20 +183,44 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     // }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if(empty($_GET)){
-        if($allusers = $userStore->findAll())if(empty($_GET)){{
-            if($userStore->deleteById($userid)){
-                $returnData = array();
-                $returnData['users'] = $userStore;
-
-                $response = new Response();
-                $response->setHttpStatusCode(200);
-                $response->setSuccess(true);
-                $response->addMessage("All users retrieved");
-                $response->setData($returnData);
-                $response->send();
-                exit;
+        if($allusers = $userStore->findAll()){
+            $allUsersNoPassword = array();
+            foreach ($allusers as $value) {
+                unset($value["password"]);
+                array_push($allUsersNoPassword, $value);
             }
+            $userCount = $userStore->count();
+            $returnData = array();
+            $returnData['rows_returned'] = $userCount;
+            $returnData['users'] = $allUsersNoPassword;
+
+            $response = new Response();
+            $response->setHttpStatusCode(200);
+            $response->setSuccess(true);
+            $response->addMessage("All users retrieved");
+            $response->setData($returnData);
+            $response->send();
+            exit;
         }
+    } elseif(array_key_exists('userid',$_GET)) {
+        $userid = $_GET['userid'];
+
+        if($user = $userStore->findById($userid)){
+            unset($user["password"]);
+            $returnData['user'] = $user;
+            
+    
+            $response = new Response();
+            $response->setHttpStatusCode(200);
+            $response->setSuccess(true);
+            $response->addMessage("User retrieved");
+            $response->toCache(true);
+            $response->setData($returnData);
+            $response->send();
+            exit;
+        }
+
+
     }
 
 
