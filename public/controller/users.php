@@ -207,6 +207,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if($user = $userStore->findById($userid)){
             unset($user["password"]);
+            $returnData = array();
             $returnData['user'] = $user;
             
     
