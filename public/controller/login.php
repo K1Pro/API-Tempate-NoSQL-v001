@@ -138,25 +138,31 @@
     
         try {
 
+            $lastSessionID = $user["loginactivity"] == null ? 1 : end($user["loginactivity"])["session_id"] + 1;
+            
+            $newloginactivity = array();
+            $newloginactivity["session_id"] = $lastSessionID;
+            $newloginactivity["accesstoken"] = $accesstoken;
+            $newloginactivity["accesstokenexpiry"] = date("Y-m-d h:i:s", strtotime("+$access_token_expiry_seconds second"));
+            $newloginactivity["refreshtoken"] = $refreshtoken;
+            $newloginactivity["refreshtokenexpiry"] = date("Y-m-d h:i:s", strtotime("+$refresh_token_expiry_seconds second"));
+
+            $loginactivity = array();
+            if ($user["loginactivity"] != null) {
+                foreach ($user["loginactivity"] as $value) {
+                    array_push($loginactivity, $value);
+                }
+            } 
+            array_push($loginactivity, $newloginactivity);
+
             $userStore->updateById($returned_id, [ "loginattempts" => 0 ]);
-            $userStore->updateById($returned_id, [ "loginactivity" => [[
-                "accesstoken" => $accesstoken,
-                "accesstokenexpiry" => $access_token_expiry_seconds,
-                "refreshtoken" => $refreshtoken,
-                "refreshtokenexpiry" => $refresh_token_expiry_seconds,
-                ]] 
-            ]);
-    
-            $user = $userStore->findOneBy(["username", "=", $username]); //gets updated version
-            unset($user["password"]);
-            $returnData = array();
-            $returnData['user'] = $user;
+            $userStore->updateById($returned_id, [ "loginactivity" => $loginactivity]);
 
             $response = new Response();
             $response->setHttpStatusCode(200);
             $response->setSuccess(true);
-            $response->addMessage('User retrieved');
-            $response->setData($user);
+            $response->addMessage("New session created");
+            $response->setData($newloginactivity);
             $response->send();
             exit;
         }

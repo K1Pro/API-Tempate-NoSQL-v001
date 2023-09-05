@@ -87,7 +87,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             "email" => $email,
             "useractive" => "Y",
             "loginattempts" => 0,
-            "loginactivity" => array(),
+            "loginactivity" => null,
             "activity" => [
               ["created" => $date->format('Y-m-d\TH:i:sO')]
             ]
