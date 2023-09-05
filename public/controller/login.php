@@ -87,24 +87,45 @@
             $returned_id = $user['_id'];
             $returned_fullname = $user['fullname'];
             $returned_username = $user['username'];
-            $returned_passowrd = $user['password'];
+            $returned_password = $user['password'];
             $returned_useractive = $user['useractive'];
             $returned_loginattempts = $user['loginattempts'];
 
-            unset($user["password"]);
-            $returnData = array();
-            $returnData['user'] = $user;
+            if($returned_useractive !== 'Y') {
+                $response = new Response();
+                $response->setHttpStatusCode(401);
+                $response->setSuccess(false);
+                $response->addMessage('User account not active');
+                $response->send();
+                exit;
+            }
 
-            $response = new Response();
-            $response->setHttpStatusCode(200);
-            $response->setSuccess(true);
-            $response->addMessage('User retrieved');
-            $response->setData($returned_useractive);
-            $response->send();
-            exit;
+            if($returned_loginattempts >= 3) {
+                $response = new Response();
+                $response->setHttpStatusCode(401);
+                $response->setSuccess(false);
+                $response->addMessage('User account is currently locked out');
+                $response->send();
+                exit;
+            }
 
+            if(!password_verify($password, $returned_password)) {
+                $userStore->updateById($returned_id, [ "loginattempts" => $returned_loginattempts + 1 ]);
+    
+                $response = new Response();
+                $response->setHttpStatusCode(401);
+                $response->setSuccess(false);
+                $response->addMessage('Username or password is incorrect');
+                $response->send();
+                exit;
+            }
 
-
+            $accesstoken = base64_encode(bin2hex(openssl_random_pseudo_bytes(24)).time());
+            $refreshtoken = base64_encode(bin2hex(openssl_random_pseudo_bytes(24)).time());
+    
+            $access_token_expiry_seconds = 57600;
+            $refresh_token_expiry_seconds = 1209600;
+        
         }
         catch(PDOException $ex){
             $response = new Response();
@@ -114,6 +135,43 @@
             $response->send();
             exit;
         }
+    
+        try {
+
+            $userStore->updateById($returned_id, [ "loginattempts" => 0 ]);
+            $userStore->updateById($returned_id, [ "loginactivity" => [[
+                "accesstoken" => $accesstoken,
+                "accesstokenexpiry" => $access_token_expiry_seconds,
+                "refreshtoken" => $refreshtoken,
+                "refreshtokenexpiry" => $refresh_token_expiry_seconds,
+                ]] 
+            ]);
+    
+            $user = $userStore->findOneBy(["username", "=", $username]); //gets updated version
+            unset($user["password"]);
+            $returnData = array();
+            $returnData['user'] = $user;
+
+            $response = new Response();
+            $response->setHttpStatusCode(200);
+            $response->setSuccess(true);
+            $response->addMessage('User retrieved');
+            $response->setData($user);
+            $response->send();
+            exit;
+        }
+        catch(PDOException $ex) {
+            $writeDB->rollBack();
+            $response = new Response();
+            $response->setHttpStatusCode(500);
+            $response->setSuccess(false);
+            $response->addMessage('There was an issue logging in - please try again');
+            $response->send();
+            exit;
+        }
+
+
+
     }
 
 ?>

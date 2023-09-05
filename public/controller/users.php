@@ -85,8 +85,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             "username" => $username,
             "password" => $hashed_password,
             "email" => $email,
+            "useractive" => "Y",
+            "loginattempts" => 0,
+            "loginactivity" => array(),
             "activity" => [
-              "created" => $date->format('Y-m-d\TH:i:sO')
+              ["created" => $date->format('Y-m-d\TH:i:sO')]
             ]
            ];
            
