@@ -46,7 +46,65 @@ if(!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION
     exit();
 }
 
-$accesstoken = $_SERVER['HTTP_AUTHORIZATION'];
+$accessToken = $_SERVER['HTTP_AUTHORIZATION'];
+$accessTokenCount = array();
+for ($x = 0; $x < 10; $x++) {
+    $accessTokenSearch = $userStore
+        ->createQueryBuilder()
+        ->where( [ "loginactivity.$x.accesstoken", "=", $accessToken ] )
+        ->getQuery()
+        ->fetch();
+    if(!empty($accessTokenSearch)) {
+        array_push($accessTokenCount, $accessTokenSearch);
+        $accessTokenRow = $x;
+    }  
+}
+// add accounttype validation here too
+
+if (empty($accessTokenCount)) {
+    $response = new Response();
+    $response->setHttpStatusCode(401);
+    $response->setSuccess(false);
+    $response->addMessage('Invalid access token');
+    $response->send();
+    exit();
+}
+
+$row = $accessTokenCount[0][0];
+
+$returned_userid = $row['_id'];
+$returned_accesstokenexpiry = $row["loginactivity"][$accessTokenRow]['accesstokenexpiry'];
+$returned_useractive = $row['useractive'];
+$returned_loginattempts = $row['loginattempts'];
+
+if ($returned_useractive !== 'Y') {
+    $response = new Response();
+    $response->setHttpStatusCode(401);
+    $response->setSuccess(false);
+    $response->addMessage('User account not active');
+    $response->send();
+    exit();
+}
+
+if($returned_loginattempts >= 3) {
+    $response = new Response();
+    $response->setHttpStatusCode(401);
+    $response->setSuccess(false);
+    $response->addMessage('User account is currently locked out');
+    $response->send();
+    exit();
+}
+
+if (strtotime($returned_accesstokenexpiry) < time()){
+    $response = new Response();
+    $response->setHttpStatusCode(401);
+    $response->setSuccess(false);
+    $response->addMessage('Access token expired');
+    $response->send();
+    exit();
+}
+
+// end authentication script
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -110,6 +168,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             "password" => $hashed_password,
             "email" => $email,
             "useractive" => "Y",
+            "accounttype" => "user",
             "loginattempts" => 0,
             "loginactivity" => null,
             "activity" => [
@@ -224,7 +283,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = new Response();
             $response->setHttpStatusCode(200);
             $response->setSuccess(true);
-            $response->addMessage($accesstoken);
+            $response->addMessage("Users retrieved");
             $response->setData($returnData);
             $response->send();
             exit;
