@@ -138,7 +138,7 @@
     
         try {
 
-            $lastSessionID = $user["loginactivity"] == null ? 1 : end($user["loginactivity"])["session_id"] + 1;
+            $lastSessionID = $user["loginactivity"] == null ? 1 : $user["loginactivity"][0]["session_id"] + 1;
             
             $newloginactivity = array();
             $newloginactivity["session_id"] = $lastSessionID;
@@ -148,13 +148,14 @@
             $newloginactivity["refreshtokenexpiry"] = date("Y-m-d h:i:s", strtotime("+$refresh_token_expiry_seconds second"));
 
             $loginactivity = array();
+            array_push($loginactivity, $newloginactivity);
             if ($user["loginactivity"] != null) {
                 foreach ($user["loginactivity"] as $value) {
                     array_push($loginactivity, $value);
                 }
             } 
-            array_push($loginactivity, $newloginactivity);
-
+            $loginactivity = array_slice($loginactivity, 0, 10);
+            
             $userStore->updateById($returned_id, [ "loginattempts" => 0 ]);
             $userStore->updateById($returned_id, [ "loginactivity" => $loginactivity]);
 
