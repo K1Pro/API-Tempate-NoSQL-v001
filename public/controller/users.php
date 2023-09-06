@@ -36,7 +36,6 @@ if($_SERVER['REQUEST_METHOD'] === 'OPTIONS'){
 // handle options request method for CORS ^^^^^^
 
 // begin authentication script
-
 if(!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION']) < 1) {
     $response = new Response();
     $response->setHttpStatusCode(401);
@@ -47,50 +46,9 @@ if(!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION
     exit();
 }
 
+$accesstoken = $_SERVER['HTTP_AUTHORIZATION'];
 
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    if(empty($_POST)){
-        if($allusers = $userStore->findAll()){
-            $allUsersNoPassword = array();
-            foreach ($allusers as $value) {
-                unset($value["password"]);
-                array_push($allUsersNoPassword, $value);
-            }
-            $userCount = $userStore->count();
-            $returnData = array();
-            $returnData['rows_returned'] = $userCount;
-            $returnData['users'] = $allUsersNoPassword;
-
-            $response = new Response();
-            $response->setHttpStatusCode(200);
-            $response->setSuccess(true);
-            $response->addMessage("All users retrieved");
-            $response->setData($returnData);
-            $response->send();
-            exit;
-        }
-    } elseif(array_key_exists('userid',$_POST)) {
-        $userid = $_POST['userid'];
-
-        if($user = $userStore->findById($userid)){
-            unset($user["password"]);
-            $returnData = array();
-            $returnData['user'] = $user;
-            
-    
-            $response = new Response();
-            $response->setHttpStatusCode(200);
-            $response->setSuccess(true);
-            $response->addMessage("User retrieved");
-            $response->toCache(true);
-            $response->setData($returnData);
-            $response->send();
-            exit;
-        }
-
-
-    }
 
     if($_SERVER['CONTENT_TYPE'] !== 'application/json'){
         $response = new Response();
@@ -266,7 +224,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = new Response();
             $response->setHttpStatusCode(200);
             $response->setSuccess(true);
-            $response->addMessage("All users retrieved");
+            $response->addMessage($accesstoken);
             $response->setData($returnData);
             $response->send();
             exit;
