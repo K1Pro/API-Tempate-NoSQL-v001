@@ -1,29 +1,29 @@
 <?php
 
-    require_once('db.php');
-    require_once('../model/Response.php');
+require_once('db.php');
+require_once('../model/Response.php');
 
-    // try{
-    //     $writeDB = DB::connectWriteDB();
-    // }
-    // catch(PDOException $ex) {
-    //     error_log('Connection error: '.$ex, 0);
-    //     $response = new Response();
-    //     $response->setHttpStatusCode(500);
-    //     $response->setSuccess(false);
-    //     $response->addMessage('Database connection error');
-    //     $response->send();
-    //     exit;
-    // }
+// try{
+//     $writeDB = DB::connectWriteDB();
+// }
+// catch(PDOException $ex) {
+//     error_log('Connection error: '.$ex, 0);
+//     $response = new Response();
+//     $response->setHttpStatusCode(500);
+//     $response->setSuccess(false);
+//     $response->addMessage('Database connection error');
+//     $response->send();
+//     exit;
+// }
 
-    // if($_SERVER['REQUEST_METHOD'] !== 'POST'){
-    //     $response = new Response();
-    //     $response->setHttpStatusCode(405);
-    //     $response->setSuccess(false);
-    //     $response->addMessage('Request method not allowed');
-    //     $response->send();
-    //     exit;
-    // }
+if($_SERVER['REQUEST_METHOD'] !== 'OPTIONS' && $_SERVER['REQUEST_METHOD'] !== 'POST' && $_SERVER['REQUEST_METHOD'] !== 'GET' && $_SERVER['REQUEST_METHOD'] !== 'PATCH' && $_SERVER['REQUEST_METHOD'] !== 'DELETE'){
+    $response = new Response();
+    $response->setHttpStatusCode(405);
+    $response->setSuccess(false);
+    $response->addMessage('Request method not allowed');
+    $response->send();
+    exit;
+}
 
 // handle options request method for CORS VVVVVV
 if($_SERVER['REQUEST_METHOD'] === 'OPTIONS'){
@@ -47,11 +47,12 @@ if(!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION
 }
 
 $accessToken = $_SERVER['HTTP_AUTHORIZATION'];
+
 $accessTokenCount = array();
 for ($x = 0; $x < 10; $x++) {
     $accessTokenSearch = $userStore
         ->createQueryBuilder()
-        ->where( [ "loginactivity.$x.accesstoken", "=", $accessToken ] )
+        ->where( [ "LoginActivity.$x.accesstoken", "=", $accessToken ] )
         ->getQuery()
         ->fetch();
     if(!empty($accessTokenSearch)) {
@@ -59,7 +60,6 @@ for ($x = 0; $x < 10; $x++) {
         $accessTokenRow = $x;
     }  
 }
-// add accounttype validation here too
 
 if (empty($accessTokenCount)) {
     $response = new Response();
@@ -73,9 +73,10 @@ if (empty($accessTokenCount)) {
 $row = $accessTokenCount[0][0];
 
 $returned_userid = $row['_id'];
-$returned_accesstokenexpiry = $row["loginactivity"][$accessTokenRow]['accesstokenexpiry'];
-$returned_useractive = $row['useractive'];
-$returned_loginattempts = $row['loginattempts'];
+$returned_accounttype = $row['AccountType'];
+$returned_accesstokenexpiry = $row["LoginActivity"][$accessTokenRow]['accesstokenexpiry'];
+$returned_useractive = $row['UserActive'];
+$returned_loginattempts = $row['LoginAttempts'];
 
 if ($returned_useractive !== 'Y') {
     $response = new Response();
@@ -128,51 +129,53 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if(!isset($jsonData->fullname) || !isset($jsonData->username) || !isset($jsonData->password)) {
+    if(!isset($jsonData->FirstName) || !isset($jsonData->Username) || !isset($jsonData->Password)) {
         $response = new Response();
         $response->setHttpStatusCode(400);
         $response->setSuccess(false);
-        (!isset($jsonData->fullname) ? $response->addMessage('Full name not supplied') : false);
-        (!isset($jsonData->username) ? $response->addMessage('Username not supplied') : false);
-        (!isset($jsonData->password) ? $response->addMessage('Password not supplied') : false);
+        (!isset($jsonData->FirstName) ? $response->addMessage('First Name not supplied') : false);
+        (!isset($jsonData->Username) ? $response->addMessage('Username not supplied') : false);
+        (!isset($jsonData->Password) ? $response->addMessage('Password not supplied') : false);
         $response->send();
         exit;
     }
 
-    // you can insert more password checks here, such as one uppercase, lowercase and number....
-    if(strlen($jsonData->fullname) < 1 || strlen($jsonData->fullname) > 255 || strlen($jsonData->username) < 1 || strlen($jsonData->username) > 255 || strlen($jsonData->password) < 1 || strlen($jsonData->password) > 255){
+    // you can insert more Password checks here, such as one uppercase, lowercase and number....
+    if(strlen($jsonData->FirstName) < 1 || strlen($jsonData->FirstName) > 255 || strlen($jsonData->Username) < 1 || strlen($jsonData->Username) > 255 || strlen($jsonData->Password) < 1 || strlen($jsonData->Password) > 255 || strlen($jsonData->Email) < 1 || strlen($jsonData->Email) > 255){
         $response = new Response();
         $response->setHttpStatusCode(400);
         $response->setSuccess(false);
-        (strlen($jsonData->fullname) < 1 ? $response->addMessage('Full name cannot be blank') : false);
-        (strlen($jsonData->fullname) > 255 ? $response->addMessage('Full name cannot be greater than 255 characters') : false);
-        (strlen($jsonData->username) < 1 ? $response->addMessage('Username cannot be blank') : false);
-        (strlen($jsonData->username) > 255 ? $response->addMessage('Username cannot be greater than 255 characters') : false);
-        (strlen($jsonData->password) < 1 ? $response->addMessage('Password cannot be blank') : false);
-        (strlen($jsonData->password) > 255 ? $response->addMessage('Password cannot be greater than 255 characters') : false);
+        (strlen($jsonData->FirstName) < 1 ? $response->addMessage('First Name cannot be blank') : false);
+        (strlen($jsonData->FirstName) > 255 ? $response->addMessage('First Name cannot be greater than 255 characters') : false);
+        (strlen($jsonData->Username) < 1 ? $response->addMessage('Username cannot be blank') : false);
+        (strlen($jsonData->Username) > 255 ? $response->addMessage('Username cannot be greater than 255 characters') : false);
+        (strlen($jsonData->Password) < 1 ? $response->addMessage('Password cannot be blank') : false);
+        (strlen($jsonData->Password) > 255 ? $response->addMessage('Password cannot be greater than 255 characters') : false);
+        (strlen($jsonData->Email) < 1 ? $response->addMessage('Email cannot be blank') : false);
+        (strlen($jsonData->Email) > 255 ? $response->addMessage('Email cannot be greater than 255 characters') : false);
         $response->send();
         exit;
     }
     
-    $fullname = trim($jsonData->fullname);
-    $username = trim($jsonData->username);
-    $email = trim($jsonData->email);
-    $password = $jsonData->password;
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    $FirstName = trim($jsonData->FirstName);
+    $Username = trim($jsonData->Username);
+    $Email = trim($jsonData->Email);
+    $Password = $jsonData->Password;
+    $Hashed_Password = password_hash($Password, PASSWORD_DEFAULT);
     $date = new DateTime();
 
     try{
         $userinfo = [
-            "fullname" => $fullname,
-            "username" => $username,
-            "password" => $hashed_password,
-            "email" => $email,
-            "useractive" => "Y",
-            "accounttype" => "user",
-            "loginattempts" => 0,
-            "loginactivity" => null,
-            "activity" => [
-              ["created" => $date->format('Y-m-d\TH:i:sO')]
+            "FirstName" => $FirstName,
+            "Username" => $Username,
+            "Password" => $Hashed_Password,
+            "Email" => $Email,
+            "UserActive" => "Y",
+            "AccountType" => "User",
+            "LoginAttempts" => 0,
+            "LoginActivity" => null,
+            "Activity" => [
+              ["Created" => $date->format('Y-m-d\TH:i:sO')]
             ]
            ];
            
@@ -180,9 +183,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         if($results = $userStore->insert($userinfo)) {
 
             $returnData = array();
-            $returnData['fullname'] = $fullname;
-            $returnData['username'] = $username;
-            $returnData['email'] = $email;
+            $returnData['FirstName'] = $FirstName;
+            $returnData['Username'] = $Username;
+            $returnData['Email'] = $Email;
 
             $response = new Response();
             $response->setHttpStatusCode(201);
@@ -207,8 +210,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     // try {
-    //     $query = $writeDB->prepare('select id from tblusers where username = :username');
-    //     $query->bindParam(':username', $username, PDO::PARAM_STR);
+    //     $query = $writeDB->prepare('select id from tblusers where Username = :Username');
+    //     $query->bindParam(':Username', $Username, PDO::PARAM_STR);
     //     $query->execute();
 
     //     $rowCount = $query->rowCount();
@@ -222,12 +225,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     //         exit;
     //     }
 
-    //     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    //     $Hashed_Password = password_hash($Password, PASSWORD_DEFAULT);
 
-    //     $query = $writeDB->prepare('insert into tblusers (fullname, username, password) values (:fullname, :username, :password)');
-    //     $query->bindParam(':fullname', $fullname, PDO::PARAM_STR);
-    //     $query->bindParam(':username', $username, PDO::PARAM_STR);
-    //     $query->bindParam(':password', $hashed_password, PDO::PARAM_STR);
+    //     $query = $writeDB->prepare('insert into tblusers (FirstName, Username, Password) values (:FirstName, :Username, :Password)');
+    //     $query->bindParam(':FirstName', $FirstName, PDO::PARAM_STR);
+    //     $query->bindParam(':Username', $Username, PDO::PARAM_STR);
+    //     $query->bindParam(':Password', $Hashed_Password, PDO::PARAM_STR);
     //     $query->execute();
 
     //     $rowCount = $query->rowCount();
@@ -245,8 +248,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     //     $returnData = array();
     //     $returnData['user_id'] = $lastUserID;
-    //     $returnData['fullname'] = $fullname;
-    //     $returnData['username'] = $username;
+    //     $returnData['FirstName'] = $FirstName;
+    //     $returnData['Username'] = $Username;
 
     //     $response = new Response();
     //     $response->setHttpStatusCode(201);
@@ -269,10 +272,20 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     // }
 } elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if(empty($_GET)){
+
+        if ($returned_accounttype != "Administrator") {
+            $response = new Response();
+            $response->setHttpStatusCode(401);
+            $response->setSuccess(false);
+            $response->addMessage('Not authorized');
+            $response->send();
+            exit();
+        }
+
         if($allusers = $userStore->findAll()){
             $allUsersNoPassword = array();
             foreach ($allusers as $value) {
-                unset($value["password"]);
+                unset($value["Password"]);
                 array_push($allUsersNoPassword, $value);
             }
             $userCount = $userStore->count();
@@ -291,11 +304,51 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif(array_key_exists('userid',$_GET)) {
         $userid = $_GET['userid'];
 
-        if($user = $userStore->findById($userid)){
-            unset($user["password"]);
+        if ($userid == '' || $userid == $returned_userid) {
+            $user = $userStore->findById($returned_userid);
+            unset($user["Password"]);
             $returnData = array();
             $returnData['user'] = $user;
-            
+
+            $response = new Response();
+            $response->setHttpStatusCode(200);
+            $response->setSuccess(true);
+            $response->addMessage("Logged In User retrieved");
+            $response->toCache(true);
+            $response->setData($returnData);
+            $response->send();
+            exit;
+        }
+
+        if (!is_numeric($userid)) {
+            $response = new Response();
+            $response->setHttpStatusCode(400);
+            $response->setSuccess(false);
+            $response->addMessage("User ID must be numeric");
+            $response->send();
+            exit;
+        }
+
+        if ($returned_accounttype != "Administrator") {
+            $response = new Response();
+            $response->setHttpStatusCode(401);
+            $response->setSuccess(false);
+            $response->addMessage('Not authorized');
+            $response->send();
+            exit();
+        }
+
+        if(!$user = $userStore->findById($userid)){
+            $response = new Response();
+            $response->setHttpStatusCode(404);
+            $response->setSuccess(false);
+            $response->addMessage('User not found');
+            $response->send();
+            exit;
+        } else {
+            unset($user["Password"]);
+            $returnData = array();
+            $returnData['user'] = $user;
     
             $response = new Response();
             $response->setHttpStatusCode(200);
@@ -306,8 +359,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response->send();
             exit;
         }
-
-
     }
 
 
@@ -318,16 +369,32 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if(array_key_exists('userid',$_GET)) {
 
+        if ($returned_accounttype != "Administrator") {
+            $response = new Response();
+            $response->setHttpStatusCode(401);
+            $response->setSuccess(false);
+            $response->addMessage('Not authorized');
+            $response->send();
+            exit();
+        }
+
         $userid = $_GET['userid'];
 
-        if($userStore->deleteById($userid)){
+        if(!$userStore->deleteById($userid)) {
             $response = new Response();
-            $response->setHttpStatusCode(200);
-            $response->setSuccess(true);
-            $response->addMessage("Task deleted");
+            $response->setHttpStatusCode(404);
+            $response->setSuccess(false);
+            $response->addMessage('Task not found');
             $response->send();
             exit;
         }
+
+        $response = new Response();
+        $response->setHttpStatusCode(200);
+        $response->setSuccess(true);
+        $response->addMessage("Task deleted");
+        $response->send();
+        exit;
     }
 }
 
