@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="snackbar.css" />
     <title>Login</title>
     <style>
       body {
@@ -25,19 +26,22 @@
   </head>
   <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <div class="content">
-      <div class="loginform" id="app" v-cloak>
-        <template v-if="mode == 1">
-          <label>Username: </label>
-          <input type="text" v-model="username" /><br /><br />
-          <label>Password: </label>
-          <input type="password" v-model="password" /><br /><br />
-          <p>{{ loginResponse }}</p>
-          <button type="button" @click="login()">Log In</button>
-        </template>
-        <template v-else-if="mode == 2">v-else-if</template>
-        <template v-else>v-else</template>
-      </div>
+    <div id="app" v-cloak>
+      <div id="snackbar"></div>
+      <template v-if="accessToken === undefined">
+        <div class="content">
+          <div class="loginform">
+            <label>Username: </label>
+            <input type="text" v-model="username" /><br /><br />
+            <label>Password: </label>
+            <input type="password" v-model="password" /><br /><br />
+            <!-- <p>{{ loginResponse }}</p> -->
+            <button type="button" @click="login()">Log In</button>
+          </div>
+        </div>
+      </template>
+      <!-- <template v-else-if="mode == 2">v-else-if</template> -->
+      <template v-else>v-else</template>
     </div>
     <script src="app.js"></script>
   </body>
