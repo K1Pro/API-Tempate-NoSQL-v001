@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <style>
+      body {
+        background: #555;
+      }
+      .content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 90vh;
+      }
+      .loginform {
+        text-align: center;
+        margin: auto;
+        background: white;
+        padding: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <div class="content">
+      <div class="loginform" id="app" v-cloak>
+        <label>Username: </label>
+        <input type="text" v-model="username" /><br /><br />
+        <label>Password: </label>
+        <input type="password" v-model="password" /><br /><br />
+        <button type="button" @click="login()">Log In</button>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
