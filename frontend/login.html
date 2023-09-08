@@ -27,12 +27,16 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <div class="content">
       <div class="loginform" id="app" v-cloak>
-        <label>Username: </label>
-        <input type="text" v-model="username" /><br /><br />
-        <label>Password: </label>
-        <input type="password" v-model="password" /><br /><br />
-        <p>{{ loginResponse }}</p>
-        <button type="button" @click="login()">Log In</button>
+        <template v-if="mode == 1">
+          <label>Username: </label>
+          <input type="text" v-model="username" /><br /><br />
+          <label>Password: </label>
+          <input type="password" v-model="password" /><br /><br />
+          <p>{{ loginResponse }}</p>
+          <button type="button" @click="login()">Log In</button>
+        </template>
+        <template v-else-if="mode == 2">v-else-if</template>
+        <template v-else>v-else</template>
       </div>
     </div>
     <script src="app.js"></script>

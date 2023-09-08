@@ -7,6 +7,7 @@ const vm = Vue.createApp({
       servrURL:
         'http://192.168.54.22/php81/SleekDB-master/template/v001/public/',
       loginEndPt: 'controller/sessions.php',
+      mode: 1,
     };
   },
   methods: {
