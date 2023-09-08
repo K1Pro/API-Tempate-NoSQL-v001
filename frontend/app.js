@@ -5,6 +5,7 @@ const vm = Vue.createApp({
       password: '',
       servrURL:
         'http://192.168.54.22/php81/SleekDB-master/template/v001/public/',
+      // servrURL: 'https://api-template-nosql.k1pro.net/',
       loginEndPt: 'controller/sessions.php',
       userDataEndPt: 'controller/users.php?userid=',
       accessToken: document.cookie

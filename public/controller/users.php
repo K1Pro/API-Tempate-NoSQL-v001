@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] === 'OPTIONS'){
 }
 // handle options request method for CORS ^^^^^^
 
-// begin authentication script
+// begin authentication script ---> use REDIRECT_HTTP_AUTHORIZATION instead of HTTP_AUTHORIZATION online
 if(!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION']) < 1) {
     $response = new Response();
     $response->setHttpStatusCode(401);

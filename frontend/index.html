@@ -5,10 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="snackbar.css" />
+    <link rel="stylesheet" href="login.css" />
     <title>Login</title>
     <style>
       body {
         background: #999999;
+        font-family: 'Helvetica', sans-serif;
       }
       .content {
         display: flex;
@@ -19,7 +21,9 @@
       .loginform {
         text-align: center;
         margin: auto;
-        background: white;
+      }
+      .inputs {
+        /* background: white; */
         padding: 10px;
       }
     </style>
@@ -31,12 +35,15 @@
       <template v-if="accessToken === undefined">
         <div class="content">
           <div class="loginform">
-            <label>Username: </label>
-            <input type="text" v-model="username" /><br /><br />
-            <label>Password: </label>
-            <input type="password" v-model="password" /><br /><br />
-            <!-- <p>{{ loginResponse }}</p> -->
-            <button type="button" @click="login(loginEndPt)">Log In</button>
+            <div class="square"></div>
+            <div class="inputs">
+              <label>Username: </label>
+              <input type="text" v-model="username" /><br /><br />
+              <label>Password: </label>
+              <input type="password" v-model="password" /><br /><br />
+              <!-- <p>{{ loginResponse }}</p> -->
+              <button type="button" @click="login(loginEndPt)">Log In</button>
+            </div>
           </div>
         </div>
       </template>
