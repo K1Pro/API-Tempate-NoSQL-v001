@@ -3,14 +3,14 @@ const vm = Vue.createApp({
     return {
       username: '',
       password: '',
-      loginResponse: '',
       servrURL:
         'http://192.168.54.22/php81/SleekDB-master/template/v001/public/',
       loginEndPt: 'controller/sessions.php',
-      mode: 1,
+      userDataEndPt: 'controller/users.php?userid=',
       accessToken: document.cookie
         .match(new RegExp(`(^| )_a_t=([^;]+)`))
         ?.at(2),
+      userDataResponse: '',
     };
   },
   methods: {
@@ -25,9 +25,9 @@ const vm = Vue.createApp({
     getCookie(name) {
       return document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2);
     },
-    async login() {
+    async login(endPt) {
       try {
-        const response = await fetch(this.servrURL + this.loginEndPt, {
+        const response = await fetch(this.servrURL + endPt, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -37,14 +37,37 @@ const vm = Vue.createApp({
             Password: this.password,
           }),
         });
-        const users = await response.json();
-        if (users.success) {
-          this.mode = 2;
-          console.log(users);
-          console.log(users.data.accesstoken);
-          document.cookie = `_a_t=${users.data.accesstoken}`;
+        const userLogIn = await response.json();
+        if (userLogIn.success) {
+          console.log(userLogIn);
+          console.log(userLogIn.data.accesstoken);
+          this.accessToken = userLogIn.data.accesstoken;
+          document.cookie = `_a_t=${userLogIn.data.accesstoken}`;
+          this.userData(this.userDataEndPt);
         }
-        this.snackbar(users.messages[0]);
+        this.snackbar(userLogIn.messages[0]);
+      } catch (error) {
+        this.error = error.toString();
+        this.snackbar(this.error);
+      }
+    },
+    async userData(userDataEndPt) {
+      try {
+        const response = await fetch(this.servrURL + userDataEndPt, {
+          method: 'GET',
+          headers: {
+            Authorization: this.accessToken,
+          },
+        });
+        const userData = await response.json();
+        if (userData.success) {
+          this.userDataResponse = userData.data.user.FirstName;
+        } else {
+          this.snackbar(userData.messages[0]);
+          document.cookie =
+            '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          this.accessToken = undefined;
+        }
       } catch (error) {
         this.error = error.toString();
         this.snackbar(this.error);

@@ -36,12 +36,15 @@
             <label>Password: </label>
             <input type="password" v-model="password" /><br /><br />
             <!-- <p>{{ loginResponse }}</p> -->
-            <button type="button" @click="login()">Log In</button>
+            <button type="button" @click="login(loginEndPt)">Log In</button>
           </div>
         </div>
       </template>
       <!-- <template v-else-if="mode == 2">v-else-if</template> -->
-      <template v-else>v-else</template>
+      <template v-else>
+        <p v-show="accessToken === undefined">{{ userData(userDataEndPt) }}</p>
+        <p>Hi <b>{{ userDataResponse }}</b>,</p>
+      </template>
     </div>
     <script src="app.js"></script>
   </body>
