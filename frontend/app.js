@@ -51,8 +51,6 @@ const vm = Vue.createApp({
       }
     },
     async logoutFunc(endPt) {
-      console.log('logging out');
-      console.log(this.sessionID);
       try {
         const response = await fetch(this.servrURL + endPt + this.sessionID, {
           method: 'DELETE',
@@ -67,16 +65,12 @@ const vm = Vue.createApp({
           this.sessionID = '';
           this.accessToken = undefined;
           document.cookie =
-            '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/php81/SleekDB-master/template/v001/frontend;';
           console.log('Logged out');
-        } else {
-          this.snackbar(logOutResJSON.messages[0]);
-          console.log(logOutResJSON);
-          // document.cookie =
-          //   '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-          // this.accessToken = undefined;
-          // console.log('Logged out');
         }
+        this.snackbar(logOutResJSON.messages[0]);
+        console.log('Could not log out:');
+        console.log(logOutResJSON);
       } catch (error) {
         this.error = error.toString();
         this.snackbar(this.error);
@@ -98,11 +92,10 @@ const vm = Vue.createApp({
             userDataResJSON.data.user.LoginActivity[0].session_id;
           console.log('Logged in');
         } else {
-          this.snackbar(userDataResJSON.messages[0]);
           document.cookie =
-            '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/php81/SleekDB-master/template/v001/frontend;';
           this.accessToken = undefined;
-          console.log('Logged out');
+          console.log('Could not log in');
         }
       } catch (error) {
         this.error = error.toString();
