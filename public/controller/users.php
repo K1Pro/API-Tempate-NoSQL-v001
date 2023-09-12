@@ -302,6 +302,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } elseif(array_key_exists('userid',$_GET)) {
+        // This route is if there is no userid
         $userid = $_GET['userid'];
 
         if ($userid == '' || $userid == $returned_userid) {
@@ -366,7 +367,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 } elseif ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-
+    // This endpoint deletes a user
     if(array_key_exists('userid',$_GET)) {
 
         if ($returned_accounttype != "Administrator") {
@@ -384,7 +385,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response = new Response();
             $response->setHttpStatusCode(404);
             $response->setSuccess(false);
-            $response->addMessage('Task not found');
+            $response->addMessage('User not found');
             $response->send();
             exit;
         }
@@ -392,7 +393,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = new Response();
         $response->setHttpStatusCode(200);
         $response->setSuccess(true);
-        $response->addMessage("Task deleted");
+        $response->addMessage("User deleted");
         $response->send();
         exit;
     }

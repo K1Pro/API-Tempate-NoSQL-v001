@@ -53,7 +53,7 @@
         <ul>
           <li v-for="(value, key) in userData">{{ key }}: {{ value }}</li>
         </ul>
-        <button type="button">Log Out</button>
+        <button type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
       </template>
     </div>
     <script src="app.js"></script>
