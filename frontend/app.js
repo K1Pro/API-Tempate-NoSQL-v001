@@ -8,10 +8,8 @@ const vm = Vue.createApp({
       // servrURL: 'https://api-template-nosql.k1pro.net/',
       loginEndPt: 'controller/sessions.php',
       userDataEndPt: 'controller/users.php?userid=',
-      accessToken: document.cookie
-        .match(new RegExp(`(^| )_a_t=([^;]+)`))
-        ?.at(2),
-      userDataResponse: '',
+      accessToken: this.getCookie('_a_t'),
+      userData: '',
     };
   },
   methods: {
@@ -26,7 +24,7 @@ const vm = Vue.createApp({
     getCookie(name) {
       return document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2);
     },
-    async login(endPt) {
+    async loginFunc(endPt) {
       try {
         const response = await fetch(this.servrURL + endPt, {
           method: 'POST',
@@ -38,36 +36,37 @@ const vm = Vue.createApp({
             Password: this.password,
           }),
         });
-        const userLogIn = await response.json();
-        if (userLogIn.success) {
-          console.log(userLogIn);
-          console.log(userLogIn.data.accesstoken);
-          this.accessToken = userLogIn.data.accesstoken;
-          document.cookie = `_a_t=${userLogIn.data.accesstoken}`;
-          this.userData(this.userDataEndPt);
+        const logInResJSON = await response.json();
+        if (logInResJSON.success) {
+          this.accessToken = logInResJSON.data.accesstoken;
+          document.cookie = `_a_t=${logInResJSON.data.accesstoken}`;
+          // this.userDataFunc(this.userDataEndPt);
         }
-        this.snackbar(userLogIn.messages[0]);
+        this.snackbar(logInResJSON.messages[0]);
       } catch (error) {
         this.error = error.toString();
         this.snackbar(this.error);
       }
     },
-    async userData(userDataEndPt) {
+    async userDataFunc(endPt) {
       try {
-        const response = await fetch(this.servrURL + userDataEndPt, {
+        const response = await fetch(this.servrURL + endPt, {
           method: 'GET',
           headers: {
             Authorization: this.accessToken,
           },
         });
-        const userData = await response.json();
-        if (userData.success) {
-          this.userDataResponse = userData.data.user.FirstName;
+        const userDataResJSON = await response.json();
+        // return userDataResJSON;
+        if (userDataResJSON.success) {
+          this.userData = userDataResJSON.data.user;
+          console.log('Logged in');
         } else {
-          this.snackbar(userData.messages[0]);
+          this.snackbar(userDataResJSON.messages[0]);
           document.cookie =
             '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
           this.accessToken = undefined;
+          console.log('Logged out');
         }
       } catch (error) {
         this.error = error.toString();
@@ -76,5 +75,25 @@ const vm = Vue.createApp({
     },
   },
   computed: {},
-  watch: {},
-}).mount('#app');
+  watch: {
+    accessToken(newToken, oldToken) {
+      console.log(`New token: ${newToken}`);
+      console.log(`Old token: ${oldToken}`);
+      this.userDataFunc(this.userDataEndPt);
+    },
+  },
+  created() {
+    if (this.accessToken) {
+      this.userDataFunc(this.userDataEndPt);
+    } else {
+      console.log('No Access Token');
+    }
+  },
+  beforeMount() {},
+});
+
+vm.mount('#app');
+
+// setTimeout(() => {
+//   vm.mount('#app');
+// }, 3000);
