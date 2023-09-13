@@ -49,10 +49,10 @@ require_once('config.env');
             <button type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
             <p></p>
           </div>
-          <div class="item2">2</div>
-          <div class="item3">3</div>  
-          <div class="item4">4</div>
-          <div class="item5">5</div>
+          <div class="item2">User Accounts</div>
+          <div class="item3">Email</div>  
+          <div class="item4">ProSign</div>
+          <div class="item5">Newsletters</div>
         </div>
       </template>
     </div>
