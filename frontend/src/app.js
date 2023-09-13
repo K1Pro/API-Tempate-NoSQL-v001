@@ -34,6 +34,7 @@ const vm = Vue.createApp({
           body: JSON.stringify({
             Username: this.username,
             Password: this.password,
+            IP_Address: userIP,
           }),
         });
         const logInResJSON = await response.json();
@@ -42,6 +43,7 @@ const vm = Vue.createApp({
           document.cookie = `_a_t=${logInResJSON.data.accesstoken}`;
           // this.userDataFunc(this.userDataEndPt);
         }
+        console.log(userIP);
         this.snackbar(logInResJSON.messages[0]);
       } catch (error) {
         this.error = error.toString();
@@ -89,7 +91,6 @@ const vm = Vue.createApp({
           this.sessionID =
             userDataResJSON.data.user.LoginActivity[0].session_id;
           console.log('Logged in');
-          console.log(userIP);
         } else {
           document.cookie =
             '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/php81/SleekDB-master/template/v001/frontend;';

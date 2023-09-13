@@ -12,6 +12,7 @@ require_once('config.env');
     <link rel="stylesheet" href="./src/assets/body.css" />
     <link rel="stylesheet" href="./src/assets/snackbar.css" />
     <link rel="stylesheet" href="./src/assets/login.css" />
+    <link rel="stylesheet" href="./src/assets/grid.css" />
     <title>K1Pro</title>
     <link rel="icon" type="image/x-icon" href="./src/assets/favicon.ico" />
   </head>
@@ -38,12 +39,21 @@ require_once('config.env');
         </div>
       </template>
       <template v-else>
-        <p>Hi <b>{{ userData.FirstName }}</b>,</p>
-        <p>Below is your account info:</p>
-        <ul>
-          <li v-for="(value, key) in userData">{{ key }}: {{ value }}</li>
-        </ul>
-        <button type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
+        <div class="grid-container">
+          <div class="item1">
+            <p>Hi <b>{{ userData.FirstName }}</b>,</p>
+            <p>Below is your account info:</p>
+            <ul>
+              <li v-for="(value, key) in userData">{{ key }}: {{ value }}</li>
+            </ul>
+            <button type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
+            <p></p>
+          </div>
+          <div class="item2">2</div>
+          <div class="item3">3</div>  
+          <div class="item4">4</div>
+          <div class="item5">5</div>
+        </div>
       </template>
     </div>
     <script src="./src/app.js"></script>
