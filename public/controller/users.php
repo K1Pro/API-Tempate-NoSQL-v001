@@ -74,6 +74,7 @@ $row = $accessTokenCount[0][0];
 
 $returned_userid = $row['_id'];
 $returned_accounttype = $row['AccountType'];
+$returned_sessionid = $row["LoginActivity"][$accessTokenRow]['session_id'];
 $returned_accesstokenexpiry = $row["LoginActivity"][$accessTokenRow]['accesstokenexpiry'];
 $returned_useractive = $row['UserActive'];
 $returned_loginattempts = $row['LoginAttempts'];
@@ -310,6 +311,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             unset($user["Password"]);
             $returnData = array();
             $returnData['user'] = $user;
+            $returnData['session_id'] = $returned_sessionid; // this could potentially be a security risk
 
             $response = new Response();
             $response->setHttpStatusCode(200);

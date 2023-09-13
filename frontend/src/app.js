@@ -39,7 +39,9 @@ const vm = Vue.createApp({
         });
         const logInResJSON = await response.json();
         if (logInResJSON.success) {
+          console.log(logInResJSON);
           this.accessToken = logInResJSON.data.accesstoken;
+          this.sessionID = logInResJSON.data.session_id;
           document.cookie = `_a_t=${logInResJSON.data.accesstoken}`;
           // this.userDataFunc(this.userDataEndPt);
         }
@@ -87,9 +89,10 @@ const vm = Vue.createApp({
         const userDataResJSON = await response.json();
         // return userDataResJSON;
         if (userDataResJSON.success) {
+          if (this.sessionID == '') {
+            this.sessionID = userDataResJSON.data.session_id;
+          }
           this.userData = userDataResJSON.data.user;
-          this.sessionID =
-            userDataResJSON.data.user.LoginActivity[0].session_id;
           console.log('Logged in');
         } else {
           document.cookie =
