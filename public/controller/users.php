@@ -36,17 +36,17 @@ if($_SERVER['REQUEST_METHOD'] === 'OPTIONS'){
 // handle options request method for CORS ^^^^^^
 
 // begin authentication script ---> use REDIRECT_HTTP_AUTHORIZATION instead of HTTP_AUTHORIZATION online
-if(!isset($_SERVER['HTTP_AUTHORIZATION']) || strlen($_SERVER['HTTP_AUTHORIZATION']) < 1) {
+if(!isset($_SERVER[$CUSTOM_AUTHORIZATION]) || strlen($_SERVER[$CUSTOM_AUTHORIZATION]) < 1) {
     $response = new Response();
     $response->setHttpStatusCode(401);
     $response->setSuccess(false);
-    (!isset($_SERVER['HTTP_AUTHORIZATION']) ? $response->addMessage('Access token is missing from the header') : false);
-    (strlen($_SERVER['HTTP_AUTHORIZATION']) < 1 ? $response->addMessage('Access token cannot be blank') : false);
+    (!isset($_SERVER[$CUSTOM_AUTHORIZATION]) ? $response->addMessage('Access token is missing from the header') : false);
+    (strlen($_SERVER[$CUSTOM_AUTHORIZATION]) < 1 ? $response->addMessage('Access token cannot be blank') : false);
     $response->send();
     exit();
 }
 
-$accessToken = $_SERVER['HTTP_AUTHORIZATION'];
+$accessToken = $_SERVER[$CUSTOM_AUTHORIZATION];
 
 $accessTokenCount = array();
 for ($x = 0; $x < 10; $x++) {

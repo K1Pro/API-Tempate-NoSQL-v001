@@ -3,9 +3,7 @@ const vm = Vue.createApp({
     return {
       username: '',
       password: '',
-      servrURL:
-        'http://192.168.54.22/php81/SleekDB-master/template/v001/public/',
-      // servrURL: 'https://api-template-nosql.k1pro.net/',
+      servrURL: servrURLendPt,
       loginEndPt: 'controller/sessions.php',
       logoutEndPt: 'controller/sessions.php?sessionid=',
       userDataEndPt: 'controller/users.php?userid=',
@@ -91,6 +89,7 @@ const vm = Vue.createApp({
           this.sessionID =
             userDataResJSON.data.user.LoginActivity[0].session_id;
           console.log('Logged in');
+          console.log(userIP);
         } else {
           document.cookie =
             '_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/php81/SleekDB-master/template/v001/frontend;';
