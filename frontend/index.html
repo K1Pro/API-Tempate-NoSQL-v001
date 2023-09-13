@@ -4,34 +4,18 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="snackbar.css" />
-    <link rel="stylesheet" href="login.css" />
-    <title>Login</title>
-    <style>
-      body {
-        background: #999999;
-        font-family: 'Helvetica', sans-serif;
-      }
-      .content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 90vh;
-      }
-      .loginform {
-        text-align: center;
-        margin: auto;
-      }
-      .inputs {
-        /* background: white; */
-        padding: 10px;
-      }
-    </style>
+    <link rel="stylesheet" href="./src/assets/body.css" />
+    <link rel="stylesheet" href="./src/assets/snackbar.css" />
+    <link rel="stylesheet" href="./src/assets/login.css" />
+    <title>K1Pro</title>
+    <link rel="icon" type="image/x-icon" href="./src/assets/favicon.ico" />
   </head>
   <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <div id="app" v-cloak>
       <div id="snackbar"></div>
+      <!-- Example component below: -->
+      <!-- <k1pro></k1pro> -->
       <template v-if="accessToken === undefined">
         <div class="content">
           <div class="loginform">
@@ -57,6 +41,6 @@
         <button type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
       </template>
     </div>
-    <script src="app.js"></script>
+    <script src="./src/app.js"></script>
   </body>
 </html>

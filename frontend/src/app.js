@@ -121,6 +121,16 @@ const vm = Vue.createApp({
   beforeMount() {},
 });
 
+// creating a component example
+vm.component('k1pro', {
+  template: `<h1>{{ message }}</h1>`,
+  data() {
+    return {
+      message: 'Hello World!',
+    };
+  },
+});
+
 vm.mount('#app');
 
 // setTimeout(() => {

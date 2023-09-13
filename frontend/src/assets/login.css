@@ -6,6 +6,18 @@
   height: 100vh;
 } */
 
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90vh;
+}
+
+.loginform {
+  text-align: center;
+  margin: auto;
+}
+
 .square {
   width: 300px;
   height: 300px;
@@ -15,6 +27,11 @@
   background-size: 300px 300px;
   transform: rotateY(45deg);
   animation: rotateAnimation 8s linear infinite;
+}
+
+.inputs {
+  /* background: white; */
+  padding: 10px;
 }
 
 @keyframes rotateAnimation {
