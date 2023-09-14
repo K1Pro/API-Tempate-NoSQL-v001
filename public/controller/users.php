@@ -53,6 +53,7 @@ for ($x = 0; $x < 10; $x++) {
     $accessTokenSearch = $userStore
         ->createQueryBuilder()
         ->where( [ "LoginActivity.$x.accesstoken", "=", $accessToken ] )
+        ->disableCache()
         ->getQuery()
         ->fetch();
     if(!empty($accessTokenSearch)) {
@@ -305,7 +306,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         // This route is if there is no userid
         $userid = $_GET['userid'];
 
-        if ($userid == '' || $userid == $returned_userid) {
+        if (empty($userid) || $userid == $returned_userid) {
             $user = $userStore->findById($returned_userid);
             unset($user["Password"]);
             $returnData = array();
@@ -315,7 +316,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response->setHttpStatusCode(200);
             $response->setSuccess(true);
             $response->addMessage("Logged In User retrieved");
-            $response->toCache(true);
+            // $response->toCache(true);
             $response->setData($returnData);
             $response->send();
             exit;
@@ -355,7 +356,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $response->setHttpStatusCode(200);
             $response->setSuccess(true);
             $response->addMessage("User retrieved");
-            $response->toCache(true);
+            // $response->toCache(true);
             $response->setData($returnData);
             $response->send();
             exit;

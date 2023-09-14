@@ -22,8 +22,7 @@ export default {
       <div class="grid-container">
         <div class="item1">
           <p>
-            Hi <b>{{ userData.FirstName }}</b
-            >,
+            Hi <b>{{ userData.FirstName }}</b>,
           </p>
           <p>Below is your account info:</p>
           <ul>
@@ -66,6 +65,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
             Username: this.username,
@@ -75,7 +75,6 @@ export default {
         });
         const logInResJSON = await response.json();
         if (logInResJSON.success) {
-          console.log(logInResJSON);
           this.accessToken = logInResJSON.data.accesstoken;
           this.sessionID = logInResJSON.data.session_id;
           const tomorrow = new Date();
@@ -101,10 +100,10 @@ export default {
           method: 'DELETE',
           headers: {
             Authorization: this.accessToken,
+            'Cache-Control': 'no-store',
           },
         });
         const logOutResJSON = await response.json();
-        // return userDataResJSON;
         if (logOutResJSON.success) {
           this.userData = '';
           this.sessionID = '';
@@ -112,10 +111,10 @@ export default {
           document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
           document.cookie = `_s_i=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
           console.log('Logged out');
+        } else {
+          console.log('Could not log out:');
         }
         this.snackbar(logOutResJSON.messages[0]);
-        console.log('Could not log out:');
-        console.log(logOutResJSON);
       } catch (error) {
         this.error = error.toString();
         this.snackbar(this.error);
@@ -123,14 +122,16 @@ export default {
     },
     async userDataFunc(endPt) {
       try {
+        // Re logging in is coming from here.
+        console.log(`using this token: ${this.accessToken}`);
         const response = await fetch(servrURL + endPt, {
           method: 'GET',
           headers: {
             Authorization: this.accessToken,
+            'Cache-Control': 'no-store',
           },
         });
         const userDataResJSON = await response.json();
-        // return userDataResJSON;
         if (userDataResJSON.success) {
           this.userData = userDataResJSON.data.user;
           console.log('Logged in');
@@ -149,9 +150,9 @@ export default {
   computed: {},
   watch: {
     accessToken(newToken, oldToken) {
-      console.log(`New token: ${newToken}`);
       console.log(`Old token: ${oldToken}`);
-      this.userDataFunc(this.userDataEndPt);
+      console.log(`New token: ${newToken}`);
+      if (newToken != undefined) this.userDataFunc(this.userDataEndPt);
     },
   },
   created() {
