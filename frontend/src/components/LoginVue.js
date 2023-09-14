@@ -2,7 +2,6 @@
 export default {
   name: 'Login',
   template: /*html*/ `
-    <div id="snackbar"></div>
     <!-- Example component below: -->
     <!-- <k1pro></k1pro> -->
     <template v-if="accessToken === undefined">

@@ -7,12 +7,8 @@ export default {
     Login,
   },
   template: /*html*/ `
-    <Login></Login>
+    <snackbar></snackbar>
+    <login></login>
   `,
-  data() {
-    return {
-      componentName: 'Login',
-    };
-  },
 };
 // </script>
