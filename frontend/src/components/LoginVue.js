@@ -33,9 +33,9 @@ export default {
           <p></p>
         </div>
         <div class="item2">User Accounts</div>
-        <div class="item3">Email</div>
-        <div class="item4">ProSign</div>
-        <div class="item5">Newsletters</div>
+        <div class="item3">ProSign</div>
+        <div class="item4">Email</div>
+        <div class="item5">Social Media</div>
       </div>
     </template>
   `,
@@ -61,7 +61,6 @@ export default {
       return document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2);
     },
     async loginFunc(endPt) {
-      console.log(endPt);
       try {
         const response = await fetch(servrURL + endPt, {
           method: 'POST',
