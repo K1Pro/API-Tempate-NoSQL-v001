@@ -1,6 +1,6 @@
 // import { createApp } from 'vue'
-import App from './AppVue.js';
-import Snackbar from './components/SnackbarVue.js';
+import App from './App_vue.js';
+import Snackbar from './components/Snackbar_vue.js';
 
 // import './assets/main.css'
 

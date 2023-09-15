@@ -1,43 +1,7 @@
 // <script>
 export default {
   name: 'Login',
-  template: /*html*/ `
-    <!-- Example component below: -->
-    <!-- <k1pro></k1pro> -->
-    <template v-if="accessToken === undefined">
-      <div class="content">
-        <div class="loginform">
-          <div class="square"></div>
-          <div class="inputs">
-            <label>Username: </label>
-            <input type="text" v-model="username" /><br /><br />
-            <label>Password: </label>
-            <input type="password" v-model="password" /><br /><br />
-            <button type="button" @click="loginFunc(loginEndPt)">Log In</button>
-          </div>
-        </div>
-      </div>
-    </template>
-    <template v-else>
-      <div class="grid-container">
-        <div class="item1">
-          <p>
-            Hi <b>{{ userData.FirstName }}</b>,
-          </p>
-          <p>Below is your account info:</p>
-          <ul>
-            <li v-for="(value, key) in userData">{{ key }}: {{ value }}</li>
-          </ul>
-          <button type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
-          <p></p>
-        </div>
-        <div class="item2">User Accounts</div>
-        <div class="item3">ProSign</div>
-        <div class="item4">Email</div>
-        <div class="item5">Social Media</div>
-      </div>
-    </template>
-  `,
+
   data() {
     return {
       username: '',
@@ -47,6 +11,7 @@ export default {
       userData: '',
     };
   },
+
   methods: {
     snackbar(message) {
       const snackbar = document.getElementById('snackbar');
@@ -56,9 +21,11 @@ export default {
         snackbar.className = snackbar.className.replace('show', '');
       }, 3000);
     },
+
     getCookie(name) {
       return document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2);
     },
+
     async loginFunc(endPt) {
       try {
         const response = await fetch(servrURL + endPt, {
@@ -85,15 +52,14 @@ export default {
           document.cookie = `_s_i=${
             logInResJSON.data.session_id
           }; expires=${tomorrow.toString()};`;
-          // this.userDataFunc(this.userDataEndPt);
         }
-        console.log(userIP);
         this.snackbar(logInResJSON.messages[0]);
       } catch (error) {
         this.error = error.toString();
         this.snackbar(this.error);
       }
     },
+
     async logoutFunc(endPt) {
       try {
         const response = await fetch(servrURL + endPt + this.sessionID, {
@@ -110,9 +76,6 @@ export default {
           this.accessToken = undefined;
           document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
           document.cookie = `_s_i=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
-          console.log('Logged out');
-        } else {
-          console.log('Could not log out:');
         }
         this.snackbar(logOutResJSON.messages[0]);
       } catch (error) {
@@ -120,10 +83,9 @@ export default {
         this.snackbar(this.error);
       }
     },
+
     async userDataFunc(endPt) {
       try {
-        // Re logging in is coming from here.
-        console.log(`using this token: ${this.accessToken}`);
         const response = await fetch(servrURL + endPt, {
           method: 'GET',
           headers: {
@@ -134,12 +96,10 @@ export default {
         const userDataResJSON = await response.json();
         if (userDataResJSON.success) {
           this.userData = userDataResJSON.data.user;
-          console.log('Logged in');
         } else {
           document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
           document.cookie = `_s_i=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
           this.accessToken = undefined;
-          console.log('Could not log in');
         }
       } catch (error) {
         this.error = error.toString();
@@ -148,23 +108,66 @@ export default {
     },
   },
   computed: {},
+
   watch: {
     accessToken(newToken, oldToken) {
-      console.log(`Old token: ${oldToken}`);
-      console.log(`New token: ${newToken}`);
       if (newToken != undefined) this.userDataFunc(this.userDataEndPt);
     },
   },
+
   created() {
     this.loginEndPt = 'controller/sessions.php';
     this.logoutEndPt = 'controller/sessions.php?sessionid=';
     this.userDataEndPt = 'controller/users.php?userid=';
     if (this.accessToken) {
       this.userDataFunc(this.userDataEndPt);
-    } else {
-      console.log('No Access Token');
     }
+
+    // <style scoped>
+    this.logoutBtn = {
+      position: 'absolute',
+      top: '5px',
+      right: '15px',
+    };
+    // </style>
   },
+
   beforeMount() {},
+
+  template: /*html*/ `
+  <template v-if="accessToken === undefined">
+    <div class="content">
+      <div class="loginform">
+        <div class="square"></div>
+        <div class="inputs">
+          <label>Username: </label>
+          <input type="text" v-model="username" /><br /><br />
+          <label>Password: </label>
+          <input type="password" v-model="password" /><br /><br />
+          <button type="button" @click="loginFunc(loginEndPt)">Log In</button>
+        </div>
+      </div>
+    </div>
+  </template>
+  <template v-else>
+    <button :style="logoutBtn" type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
+    <div class="grid-container">
+      <div class="item1">
+        <p>
+          Hi <b>{{ userData.FirstName }}</b>,
+        </p>
+        <p>Below is your account info:</p>
+        <ul>
+          <li v-for="(value, key) in userData">{{ key }}: {{ value }}</li>
+        </ul>
+        <p></p>
+      </div>
+      <div class="item2">User Accounts</div>
+      <div class="item3">ProSign</div>
+      <div class="item4">Email</div>
+      <div class="item5">Social Media</div>
+    </div>
+  </template>
+`,
 };
 // </script>

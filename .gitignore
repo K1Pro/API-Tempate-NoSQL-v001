@@ -16,3 +16,4 @@
 *.ico
 *.env
 /frontend/index.php
+/frontend/src/Template.Vue

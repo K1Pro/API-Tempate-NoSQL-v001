@@ -1,11 +1,11 @@
 //<script>
 export default {
   name: 'Snackbar',
-  template: /*html*/ `
-  <div id="snackbar"></div>
-  `,
   data() {
     return {};
   },
+  template: /*html*/ `
+  <div id="snackbar"></div>
+  `,
 };
 // </script>
