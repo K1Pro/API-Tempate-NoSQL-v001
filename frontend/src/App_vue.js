@@ -1,12 +1,13 @@
 // <script>
 import Login from './components/Login_vue.js';
+import Snackbar from './components/Snackbar_vue.js';
 
 export default {
   name: 'App',
   template: /*html*/ `
-    <snackbar></snackbar>
+    <snackbar :message="message"></snackbar>
     <template v-if="accessToken === undefined">
-      <login @access-token-change="updateAccessToken"></login>
+      <login @access-token-change="updateAccessToken" @message="updateSnackbar"></login>
     </template>
     <template v-else>
       <button :style="logoutBtn" type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
@@ -31,26 +32,23 @@ export default {
 
   components: {
     Login,
+    Snackbar,
   },
   data() {
     return {
       accessToken: this.getCookie('_a_t'),
       sessionID: this.getCookie('_s_i'),
-      userData: '',
+      userData: null,
+      message: null,
     };
   },
   methods: {
-    snackbar(message) {
-      const snackbar = document.getElementById('snackbar');
-      snackbar.innerHTML = message;
-      snackbar.className = 'show';
-      setTimeout(function () {
-        snackbar.className = snackbar.className.replace('show', '');
-      }, 3000);
-    },
-
     getCookie(name) {
       return document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2);
+    },
+
+    updateSnackbar(message) {
+      this.message = message;
     },
 
     updateAccessToken(accessToken, sessionID) {
@@ -69,16 +67,16 @@ export default {
         });
         const logOutResJSON = await response.json();
         if (logOutResJSON.success) {
-          this.userData = '';
-          this.sessionID = '';
+          this.userData = null;
+          this.sessionID = undefined;
           this.accessToken = undefined;
           document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
           document.cookie = `_s_i=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
         }
-        this.snackbar(logOutResJSON.messages[0]);
+        this.message = logOutResJSON.messages[0];
       } catch (error) {
         this.error = error.toString();
-        this.snackbar(this.error);
+        this.message = this.error;
       }
     },
 
@@ -101,7 +99,7 @@ export default {
         }
       } catch (error) {
         this.error = error.toString();
-        this.snackbar(this.error);
+        this.message = this.error;
       }
     },
   },
@@ -109,8 +107,12 @@ export default {
 
   watch: {
     accessToken(newToken, oldToken) {
-      console.log('this has changed');
       if (newToken != undefined) this.userDataFunc(this.userDataEndPt);
+    },
+    message() {
+      setTimeout(() => {
+        this.message = null;
+      }, 3000);
     },
   },
 

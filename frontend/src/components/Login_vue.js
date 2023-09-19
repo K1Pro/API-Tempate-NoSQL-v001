@@ -17,8 +17,6 @@ export default {
     </div>
   `,
 
-  // props: ['accessToken', 'sessionID'],
-
   data() {
     return {
       username: '',
@@ -26,7 +24,7 @@ export default {
     };
   },
 
-  emits: ['access-token-change'],
+  emits: ['access-token-change', 'message'],
 
   methods: {
     async loginFunc(endPt) {
@@ -59,10 +57,10 @@ export default {
             logInResJSON.data.session_id
           }; expires=${tomorrow.toString()};`;
         }
-        // this.snackbar(logInResJSON.messages[0]);
+        this.$emit('message', logInResJSON.messages[0]);
       } catch (error) {
         this.error = error.toString();
-        // this.snackbar(this.error);
+        this.$emit('message', this.error);
       }
     },
   },

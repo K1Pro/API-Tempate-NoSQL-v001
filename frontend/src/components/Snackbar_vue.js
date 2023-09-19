@@ -1,11 +1,11 @@
-//<script>
+//<script> :style="snackbar"
 export default {
   name: 'Snackbar',
-  data() {
-    return {};
-  },
+
   template: /*html*/ `
-  <div id="snackbar"></div>
+  <div class="snackbar" :class="{ show: message }"> {{ message }}</div>
   `,
+
+  props: ['message'],
 };
 // </script>
