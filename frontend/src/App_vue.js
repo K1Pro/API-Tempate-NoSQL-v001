@@ -1,6 +1,7 @@
 // <script>
 import Snackbar from './components/Snackbar_vue.js';
 import Login from './components/Login_vue.js';
+import Logoutbtn from './components/LogOutBtn_vue.js';
 import Sidepanel from './components/SidePanel_vue.js';
 import Useraccounts from './components/UserAccounts_vue.js';
 import Prosign from './components/ProSign_vue.js';
@@ -12,10 +13,10 @@ export default {
   template: /*html*/ `
     <snackbar :message="message"></snackbar>
     <template v-if="accessToken === undefined">
-      <login @access-token-change="updateAccessToken" @message="updateSnackbar"></login>
+      <login @login="updateAccessToken" @login-msg="updateSnackbar"></login>
     </template>
     <template v-else>
-      <button :style="logoutBtn" type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
+      <logoutbtn :accessToken="accessToken" :sessionID="sessionID" @logout="updateAccessToken" @logout-msg="updateSnackbar">></logoutbtn>
       <div class="grid-container">
         <div class="item1">
           <sidepanel :userData="userData"></sidepanel>
@@ -39,12 +40,14 @@ export default {
   components: {
     Snackbar,
     Login,
+    Logoutbtn,
     Sidepanel,
     Useraccounts,
     Prosign,
     Email,
     Socialmedia,
   },
+
   data() {
     return {
       accessToken: this.getCookie('_a_t'),
@@ -65,30 +68,6 @@ export default {
     updateAccessToken(accessToken, sessionID) {
       this.accessToken = accessToken;
       this.sessionID = sessionID;
-    },
-
-    async logoutFunc(endPt) {
-      try {
-        const response = await fetch(servrURL + endPt + this.sessionID, {
-          method: 'DELETE',
-          headers: {
-            Authorization: this.accessToken,
-            'Cache-Control': 'no-store',
-          },
-        });
-        const logOutResJSON = await response.json();
-        if (logOutResJSON.success) {
-          this.userData = '';
-          this.sessionID = undefined;
-          this.accessToken = undefined;
-          document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
-          document.cookie = `_s_i=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;
-        }
-        this.message = logOutResJSON.messages[0];
-      } catch (error) {
-        this.error = error.toString();
-        this.message = this.error;
-      }
     },
 
     async userDataFunc(endPt) {
@@ -114,10 +93,10 @@ export default {
       }
     },
   },
-  computed: {},
 
   watch: {
     accessToken(newToken, oldToken) {
+      this.userData = '';
       if (newToken != undefined) this.userDataFunc(this.userDataEndPt);
     },
     message() {
@@ -128,19 +107,10 @@ export default {
   },
 
   created() {
-    this.logoutEndPt = 'controller/sessions.php?sessionid=';
     this.userDataEndPt = 'controller/users.php?userid=';
     if (this.accessToken) {
       this.userDataFunc(this.userDataEndPt);
     }
-
-    // <style scoped>
-    this.logoutBtn = {
-      position: 'absolute',
-      top: '5px',
-      right: '15px',
-    };
-    // </style>
   },
 };
 // </script>

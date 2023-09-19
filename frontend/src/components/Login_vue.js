@@ -24,7 +24,7 @@ export default {
     };
   },
 
-  emits: ['access-token-change', 'message'],
+  emits: ['login', 'login-msg'],
 
   methods: {
     async loginFunc(endPt) {
@@ -44,7 +44,7 @@ export default {
         const logInResJSON = await response.json();
         if (logInResJSON.success) {
           this.$emit(
-            'access-token-change',
+            'login',
             logInResJSON.data.accesstoken,
             logInResJSON.data.session_id
           );
@@ -57,10 +57,10 @@ export default {
             logInResJSON.data.session_id
           }; expires=${tomorrow.toString()};`;
         }
-        this.$emit('message', logInResJSON.messages[0]);
+        this.$emit('login-msg', logInResJSON.messages[0]);
       } catch (error) {
         this.error = error.toString();
-        this.$emit('message', this.error);
+        this.$emit('login-msg', this.error);
       }
     },
   },
