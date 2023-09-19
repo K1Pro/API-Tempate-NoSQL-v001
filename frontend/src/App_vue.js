@@ -1,6 +1,11 @@
 // <script>
-import Login from './components/Login_vue.js';
 import Snackbar from './components/Snackbar_vue.js';
+import Login from './components/Login_vue.js';
+import Sidepanel from './components/SidePanel_vue.js';
+import Useraccounts from './components/UserAccounts_vue.js';
+import Prosign from './components/ProSign_vue.js';
+import Email from './components/Email_vue.js';
+import Socialmedia from './components/SocialMedia_vue.js';
 
 export default {
   name: 'App',
@@ -13,32 +18,38 @@ export default {
       <button :style="logoutBtn" type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
       <div class="grid-container">
         <div class="item1">
-          <p>
-            Hi <b>{{ userData.FirstName }}</b>,
-          </p>
-          <p>Below is your account info:</p>
-          <ul>
-            <li v-for="(value, key) in userData">{{ key }}: {{ value }}</li>
-          </ul>
-          <p></p>
+          <sidepanel :userData="userData"></sidepanel>
         </div>
-        <div class="item2">User Accounts</div>
-        <div class="item3">ProSign</div>
-        <div class="item4">Email</div>
-        <div class="item5">Social Media</div>
+        <div class="item2">
+          <useraccounts></useraccounts>
+        </div>
+        <div class="item3">
+          <prosign></prosign>
+        </div>
+        <div class="item4">
+          <email></email>
+        </div>
+        <div class="item5">
+          <socialmedia></socialmedia>
+        </div>
       </div>
     </template>
   `,
 
   components: {
-    Login,
     Snackbar,
+    Login,
+    Sidepanel,
+    Useraccounts,
+    Prosign,
+    Email,
+    Socialmedia,
   },
   data() {
     return {
       accessToken: this.getCookie('_a_t'),
       sessionID: this.getCookie('_s_i'),
-      userData: null,
+      userData: '',
       message: null,
     };
   },
@@ -67,7 +78,7 @@ export default {
         });
         const logOutResJSON = await response.json();
         if (logOutResJSON.success) {
-          this.userData = null;
+          this.userData = '';
           this.sessionID = undefined;
           this.accessToken = undefined;
           document.cookie = `_a_t=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=${cookiePath};`;

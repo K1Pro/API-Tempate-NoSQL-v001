@@ -1,4 +1,4 @@
-//<script> :style="snackbar"
+//<script>
 export default {
   name: 'Snackbar',
 
