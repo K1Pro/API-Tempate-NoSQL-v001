@@ -6,10 +6,6 @@ export default {
     <button :style="logoutBtn" type="button" @click="logoutFunc(logoutEndPt)">Log Out</button>
   `,
 
-  data() {
-    return {};
-  },
-
   props: ['accessToken', 'sessionID'],
 
   emits: ['logout', 'logout-msg'],
