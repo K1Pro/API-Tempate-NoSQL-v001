@@ -7,11 +7,13 @@ export default {
       <div class="loginform">
         <div class="square"></div>
         <div class="inputs">
-          <label>Username: </label>
-          <input type="text" v-model="username" /><br /><br />
-          <label>Password: </label>
-          <input type="password" v-model="password" /><br /><br />
-          <button type="button" @click="loginFunc(loginEndPt)">Log In</button>
+          <form>
+            <label for="username">Username: </label>
+            <input type="text" v-model="username" id="username" autocomplete="username"/><br /><br />
+            <label for="password">Password: </label>
+            <input type="password" v-model="password" id="password"/><br /><br />
+            <button type="button" @click.prevent="loginFunc(loginEndPt)">Log In</button>
+          </form>
         </div>
       </div>
     </div>
