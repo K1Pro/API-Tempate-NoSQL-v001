@@ -6,6 +6,12 @@ body {
   overflow-x: hidden;
 }
 
+textarea,
+input,
+button {
+  font-family: 'Helvetica', sans-serif;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

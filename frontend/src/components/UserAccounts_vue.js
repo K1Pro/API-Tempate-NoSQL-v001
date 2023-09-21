@@ -3,7 +3,7 @@ export default {
   name: 'UserAccounts',
 
   template: /*html*/ `
-    <span>User Accounts</span>
+    <b>User Accounts</b>
   `,
 
   data() {

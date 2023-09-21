@@ -3,7 +3,7 @@ export default {
   name: 'ProSign',
 
   template: /*html*/ `
-    <span>ProSign</span>
+    <b>ProSign</b>
   `,
 
   data() {

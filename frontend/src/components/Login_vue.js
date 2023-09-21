@@ -9,9 +9,9 @@ export default {
         <div class="inputs">
           <form>
             <label for="username">Username: </label>
-            <input type="text" v-model="username" id="username" autocomplete="username"/><br /><br />
+            <input type="text" v-model="username" id="username" autocomplete="username" @keyup.enter="loginFunc(loginEndPt)"/><br /><br />
             <label for="password">Password: </label>
-            <input type="password" v-model="password" id="password"/><br /><br />
+            <input type="password" v-model="password" id="password" @keyup.enter="loginFunc(loginEndPt)"/><br /><br />
             <button type="button" @click.prevent="loginFunc(loginEndPt)">Log In</button>
           </form>
         </div>

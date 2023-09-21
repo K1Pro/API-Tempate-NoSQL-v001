@@ -3,8 +3,9 @@ export default {
   name: 'SocialMedia',
 
   template: /*html*/ `
-    <b>Social Media</b><br><br>
-    <input type="search" v-model="imageSearchInput" name="image-search" placeholder="Search for an image…"/>
+    <b>Social Media</b><br>
+    <textarea v-model="postText" rows="3" placeholder="Type your post..."></textarea><br>
+    <input type="search" v-model="imageSearchInput" name="image-search" placeholder="Search for an image…" @keyup.enter="imageSearch()"/>
     <button type="button" @click.prevent="imageSearch()">Search</button><br>
     <img v-if="randomImagePath" :src="randomImagePath" alt="random-image">
   `,
@@ -13,6 +14,7 @@ export default {
     return {
       imageSearchInput: '',
       randomImagePath: '',
+      postText: '',
     };
   },
 

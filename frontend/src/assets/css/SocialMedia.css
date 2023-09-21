@@ -1,19 +1,36 @@
-.item5 img {
-  width: 90vw;
-  height: 60vw;
+.item5 textarea {
+  width: 89vw;
+  resize: none;
 }
 
 .item5 input[type='search'] {
   width: 60vw;
 }
 
+.item5 button {
+  width: 30vw;
+}
+
+.item5 img {
+  width: 90vw;
+  height: 60vw;
+}
+
 @media only screen and (min-width: 768px) {
+  .item5 textarea {
+    width: 29.5vw;
+  }
+
   .item5 input[type='search'] {
     width: 20vw;
   }
 
+  .item5 button {
+    width: 10vw;
+  }
+
   .item5 img {
     width: 30vw;
-    height: 20vw;
+    height: 18vw;
   }
 }
