@@ -2,8 +2,8 @@
 import Snackbar from './components/Snackbar_vue.js';
 import Login from './components/Login_vue.js';
 import Logoutbtn from './components/LogOutBtn_vue.js';
-import Sidepanel from './components/SidePanel_vue.js';
-import Useraccounts from './components/UserAccounts_vue.js';
+import Post from './components/Post_vue.js';
+import Accountinfo from './components/AccountInfo_vue.js';
 import Prosign from './components/ProSign_vue.js';
 import Email from './components/Email_vue.js';
 import Socialmedia from './components/SocialMedia_vue.js';
@@ -19,19 +19,19 @@ export default {
       <logoutbtn :accessToken="accessToken" :sessionID="sessionID" @logout="updateAccessToken" @logout-msg="updateSnackbar">></logoutbtn>
       <div class="grid-container">
         <div class="item1">
-          <sidepanel :userData="userData"></sidepanel>
+          <socialmedia></socialmedia>
         </div>
         <div class="item2">
-          <useraccounts></useraccounts>
+          <post></post>
         </div>
         <div class="item3">
-          <prosign></prosign>
+          <accountinfo :userData="userData"></accountinfo>
         </div>
         <div class="item4">
           <email></email>
         </div>
         <div class="item5">
-          <socialmedia></socialmedia>
+        <prosign></prosign>
         </div>
       </div>
     </template>
@@ -41,8 +41,8 @@ export default {
     Snackbar,
     Login,
     Logoutbtn,
-    Sidepanel,
-    Useraccounts,
+    Post,
+    Accountinfo,
     Prosign,
     Email,
     Socialmedia,
