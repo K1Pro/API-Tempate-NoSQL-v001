@@ -5,12 +5,22 @@
   grid-row-gap: 10px;
   background-color: #c6c6c6;
   word-break: break-all;
-  /* gap: 10px; */
-  /* background-color: #ffffff; */
-  /* padding: 10px; */
 }
 
-.grid-container > div {
+.item1 {
+  background-color: #999999;
+  padding-right: 5px;
+  scrollbar-width: thin;
+  overflow-y: hidden;
+  /* background-color: rgba(255, 255, 255, 0.8); */
+  /* text-align: center; */
+  /* font-size: 30px; */
+}
+
+.item2,
+.item3,
+.item4,
+.item5 {
   background-color: #999999;
   padding: 5px;
   scrollbar-width: thin;
@@ -38,7 +48,17 @@
     word-break: break-all;
   }
 
-  .grid-container > div {
+  .item1 {
+    background-color: #999999;
+    padding-right: 5px;
+    scrollbar-width: thin;
+    overflow-y: scroll;
+  }
+
+  .item2,
+  .item3,
+  .item4,
+  .item5 {
     background-color: #999999;
     padding: 5px;
     scrollbar-width: thin;
