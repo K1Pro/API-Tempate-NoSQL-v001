@@ -158,14 +158,32 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    $FirstName = trim($jsonData->FirstName);
-    $Username = trim($jsonData->Username);
-    $Email = trim($jsonData->Email);
+    $FirstName =  htmlspecialchars(trim($jsonData->FirstName));
+    $Username =  htmlspecialchars(trim($jsonData->Username));
+    $Email =  htmlspecialchars(trim($jsonData->Email));
     $Password = $jsonData->Password;
-    $Hashed_Password = password_hash($Password, PASSWORD_DEFAULT);
+    $Hashed_Password =  htmlspecialchars(password_hash($Password, PASSWORD_DEFAULT));
     $date = new DateTime();
 
     try{
+        if($userStore->findBy(["Username", "=", $Username])){
+            $response = new Response();
+            $response->setHttpStatusCode(409);
+            $response->setSuccess(false);
+            $response->addMessage('Username already exists');
+            $response->send();
+            exit;
+        }
+
+        if($userStore->findBy(["Email", "=", $Email])){
+            $response = new Response();
+            $response->setHttpStatusCode(409);
+            $response->setSuccess(false);
+            $response->addMessage('Email already exists');
+            $response->send();
+            exit;
+        }
+
         $userinfo = [
             "FirstName" => $FirstName,
             "Username" => $Username,

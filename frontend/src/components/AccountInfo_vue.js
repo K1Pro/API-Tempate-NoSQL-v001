@@ -3,9 +3,9 @@ export default {
   name: 'SidePanel',
 
   template: /*html*/ `
-    <b>Account Info</b><br><br>
+    <b>Account Info</b><br>
     <ul>
-        <li v-for="value in Object.keys(userData).filter(e => {return (e !== 'LoginActivity')})">{{ userData[value] }}</li>
+        <li v-for="value in Object.keys(userData).filter(e => {return (e !== 'LoginActivity')})">{{ value }}: {{ userData[value] }}</li>
     </ul>
     <p></p>
   `,
