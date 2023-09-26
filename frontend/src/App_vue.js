@@ -19,7 +19,7 @@ export default {
       <logoutbtn :accessToken="accessToken" :sessionID="sessionID" @logout="updateAccessToken" @logout-msg="updateSnackbar">></logoutbtn>
       <div class="grid-container">
         <div class="item1">
-          <socialmedia></socialmedia>
+          <socialmedia :accessToken="accessToken"></socialmedia>
         </div>
         <div class="item2">
           <post></post>

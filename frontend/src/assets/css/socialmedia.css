@@ -44,3 +44,7 @@
   border-left: none;
   height: 100vh;
 }
+
+.item1 input[type='text'] {
+  width: 100%;
+}
