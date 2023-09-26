@@ -34,7 +34,7 @@ export default {
       <input type="text" id="accesstoken" v-model="accesstoken" @change="patchSocialMedia"><br><br>
 
       <b><label for="accesstokenexpiry">Access Token Expiry:</label></b><br>
-      <input type="datetime-loca" id="accesstokenexpiry" v-model="accesstokenexpiry" @change="patchSocialMedia"><br><br>
+      <input type="datetime-loca" id="accesstokenexpiry" :value="accesstokenexpiry" @change="patchSocialMedia"><br><br>
 
       <b><label for="accesstokensecret">Access Token Secret:</label></b><br>
       <input type="text" id="accesstokensecret" v-model="accesstokensecret" @change="patchSocialMedia"><br><br>
@@ -62,22 +62,9 @@ export default {
     openSocialMedia(event) {
       this.chosenSocialMedia = event.target.innerHTML;
       this.getSocialMedia(event.target.innerHTML);
-      // var i, tabcontent, tablinks;
-      // tabcontent = document.getElementsByClassName('tabcontent');
-      // for (i = 0; i < tabcontent.length; i++) {
-      //   tabcontent[i].style.display = 'none';
-      // }
-      // tablinks = document.getElementsByClassName('tablinks');
-      // for (i = 0; i < tablinks.length; i++) {
-      //   tablinks[i].className = tablinks[i].className.replace(' active', '');
-      // }
-      // document.getElementById(cityName).style.display = 'block';
-      // evt.currentTarget.className += ' active';
     },
 
     async patchSocialMedia(event) {
-      console.log(event.target.value);
-      console.log(event.target.id);
       try {
         const response = await fetch(servrURL + 'controller/socialmedia.php', {
           method: 'PATCH',
@@ -87,6 +74,7 @@ export default {
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
+            website: this.chosenSocialMedia,
             [event.target.id]: event.target.value,
           }),
         });
