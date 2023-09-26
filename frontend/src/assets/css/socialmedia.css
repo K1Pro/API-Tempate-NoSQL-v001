@@ -48,3 +48,7 @@
 .item1 input[type='text'] {
   width: 100%;
 }
+
+.item1 input[type='datetime-local'] {
+  width: 100%;
+}

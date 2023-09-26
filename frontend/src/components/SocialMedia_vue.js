@@ -7,6 +7,8 @@ export default {
       <button class="tablinks" :class="{active: chosenSocialMedia == 'Facebook'}" @click="openSocialMedia">Facebook</button>
       <button class="tablinks" :class="{active: chosenSocialMedia == 'Instagram'}" @click="openSocialMedia">Instagram</button>
       <button class="tablinks" :class="{active: chosenSocialMedia == 'Twitter'}" @click="openSocialMedia">Twitter</button>
+      <button class="tablinks" :class="{active: chosenSocialMedia == 'LinkedIn'}" @click="openSocialMedia">LinkedIn</button>
+      <button class="tablinks" :class="{active: chosenSocialMedia == 'Pexels'}" @click="openSocialMedia">Pexels</button>
     </div>
 
     <div class="tabcontent">
@@ -34,7 +36,7 @@ export default {
       <input type="text" id="accesstoken" v-model="accesstoken" @change="patchSocialMedia"><br><br>
 
       <b><label for="accesstokenexpiry">Access Token Expiry:</label></b><br>
-      <input type="datetime-loca" id="accesstokenexpiry" :value="accesstokenexpiry" @change="patchSocialMedia"><br><br>
+      <input type="datetime-local" id="accesstokenexpiry" :value="accesstokenexpiry" @change="patchSocialMedia"><br><br>
 
       <b><label for="accesstokensecret">Access Token Secret:</label></b><br>
       <input type="text" id="accesstokensecret" v-model="accesstokensecret" @change="patchSocialMedia"><br><br>
