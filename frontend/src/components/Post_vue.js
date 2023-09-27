@@ -20,11 +20,20 @@ export default {
 
   methods: {
     async imageSearch() {
+      const prevSrchTtlRslts = localStorage.getItem(
+        `Multisocial-${this.imageSearchInput.toLowerCase()}`
+      );
+      const prevSrchTtlRsltsMax = prevSrchTtlRslts
+        ? Math.floor(prevSrchTtlRslts / 80)
+        : 1;
+      const randomPage = Math.floor(
+        Math.random() * (prevSrchTtlRsltsMax - 1 + 1) + 1
+      );
       try {
         const response = await fetch(
           'https://api.pexels.com/v1/search?query=' +
             this.imageSearchInput.toLowerCase() +
-            '&page=1&per_page=80',
+            `&page=${randomPage}&per_page=80`,
           {
             method: 'GET',
             headers: {
@@ -42,7 +51,7 @@ export default {
             imageSearchJSON.total_results > 80
               ? 80
               : imageSearchJSON.total_results;
-          const randomImage = Math.floor(Math.random() * (max - 0 + 1) + 0);
+          const randomImage = Math.floor(Math.random() * (max - 1 + 1) + 1);
           this.randomImagePath =
             imageSearchJSON.photos[randomImage].src['landscape'];
         }
