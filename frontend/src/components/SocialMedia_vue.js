@@ -8,11 +8,16 @@ export default {
       <button class="tablinks" :class="{active: chosenSocialMedia == 'Instagram'}" @click="openSocialMedia">Instagram</button>
       <button class="tablinks" :class="{active: chosenSocialMedia == 'Twitter'}" @click="openSocialMedia">Twitter</button>
       <button class="tablinks" :class="{active: chosenSocialMedia == 'LinkedIn'}" @click="openSocialMedia">LinkedIn</button>
+      <button class="tablinks" :class="{active: chosenSocialMedia == 'Google'}" @click="openSocialMedia">Google</button>
+      <button class="tablinks" :class="{active: chosenSocialMedia == 'Pinterest'}" @click="openSocialMedia">Pinterest</button>
+      <button class="tablinks" :class="{active: chosenSocialMedia == 'Reddit'}" @click="openSocialMedia">Reddit</button>
+      <button class="tablinks" :class="{active: chosenSocialMedia == 'TikTok'}" @click="openSocialMedia">TikTok</button>
+      <button class="tablinks" :class="{active: chosenSocialMedia == 'YouTube'}" @click="openSocialMedia">YouTube</button>
       <button class="tablinks" :class="{active: chosenSocialMedia == 'Pexels'}" @click="openSocialMedia">Pexels</button>
     </div>
 
     <div class="tabcontent">
-      <h2>{{ chosenSocialMedia }}</h2>
+      <h2>{{ chosenSocialMedia }}<input type="checkbox" id="active" v-model="active" @click="patchSocialMedia" /></h2>
 
       <b><label for="appid">App ID:</label></b><br>
       <input type="text" id="appid" v-model="appid" @change="patchSocialMedia"><br><br>
@@ -57,6 +62,7 @@ export default {
       accesstoken: '',
       accesstokenexpiry: '',
       accesstokensecret: '',
+      active: false,
     };
   },
 
@@ -67,6 +73,10 @@ export default {
     },
 
     async patchSocialMedia(event) {
+      const inputValue =
+        event.target.type == 'checkbox'
+          ? `${event.target.checked}`
+          : event.target.value;
       try {
         const response = await fetch(servrURL + 'controller/socialmedia.php', {
           method: 'PATCH',
@@ -77,7 +87,7 @@ export default {
           },
           body: JSON.stringify({
             website: this.chosenSocialMedia,
-            [event.target.id]: event.target.value,
+            [event.target.id]: inputValue,
           }),
         });
         const patchSocialMediaJSON = await response.json();
@@ -113,6 +123,7 @@ export default {
           this.accesstoken = SMData.accesstoken;
           this.accesstokenexpiry = SMData.accesstokenexpiry;
           this.accesstokensecret = SMData.accesstokensecret;
+          this.active = SMData.active;
         } else {
           this.appid = '';
           this.apikey = '';
@@ -123,6 +134,7 @@ export default {
           this.accesstoken = '';
           this.accesstokenexpiry = '';
           this.accesstokensecret = '';
+          this.active = false;
         }
       } catch (error) {
         this.error = error.toString();

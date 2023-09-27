@@ -23,7 +23,7 @@ export default {
       try {
         const response = await fetch(
           'https://api.pexels.com/v1/search?query=' +
-            this.imageSearchInput +
+            this.imageSearchInput.toLowerCase() +
             '&page=1&per_page=80',
           {
             method: 'GET',
@@ -34,6 +34,10 @@ export default {
         );
         const imageSearchJSON = await response.json();
         if (imageSearchJSON) {
+          localStorage.setItem(
+            `Multisocial-${this.imageSearchInput.toLowerCase()}`,
+            imageSearchJSON.total_results
+          );
           const max =
             imageSearchJSON.total_results > 80
               ? 80
