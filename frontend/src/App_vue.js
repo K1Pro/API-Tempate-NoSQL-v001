@@ -22,7 +22,7 @@ export default {
           <socialmedia :accessToken="accessToken"></socialmedia>
         </div>
         <div class="item2">
-          <post></post>
+          <post :accessToken="accessToken"></post>
         </div>
         <div class="item3">
           <accountinfo :userData="userData"></accountinfo>

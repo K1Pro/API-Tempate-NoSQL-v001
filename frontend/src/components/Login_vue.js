@@ -8,8 +8,8 @@ export default {
         <div class="square"></div>
         <div class="inputs">
           <form>
-            <label for="username">Username: </label>
-            <input type="text" v-model="username" id="username" autocomplete="username" @keyup.enter="loginFunc(loginEndPt)"/><br /><br />
+            <label for="email">E-mail: </label>
+            <input type="text" v-model="email" id="email" autocomplete="email" @keyup.enter="loginFunc(loginEndPt)"/><br /><br />
             <label for="password">Password: </label>
             <input type="password" v-model="password" id="password" @keyup.enter="loginFunc(loginEndPt)"/><br /><br />
             <button type="button" @click.prevent="loginFunc(loginEndPt)">Log In</button>
@@ -21,7 +21,7 @@ export default {
 
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
     };
   },
@@ -38,7 +38,7 @@ export default {
             'Cache-Control': 'no-store',
           },
           body: JSON.stringify({
-            Username: this.username,
+            Email: this.email.toLowerCase(),
             Password: this.password,
             IP_Address: userIP,
           }),

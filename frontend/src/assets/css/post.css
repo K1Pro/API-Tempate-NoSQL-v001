@@ -4,7 +4,7 @@
 }
 
 .item2 input[type='search'] {
-  width: 60vw;
+  width: 90vw;
 }
 
 .item2 button {
@@ -22,7 +22,7 @@
   }
 
   .item2 input[type='search'] {
-    width: 20vw;
+    width: 30vw;
   }
 
   .item2 button {

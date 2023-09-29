@@ -5,10 +5,14 @@ export default {
   template: /*html*/ `
       <b>Post</b><br>
       <textarea v-model="postText" rows="3" name="post" placeholder="Type your post..."></textarea><br>
-      <input type="search" v-model="imageSearchInput" name="image-search" placeholder="Search for an image…" @keyup.enter="imageSearch()"/>
-      <button type="button" @click.prevent="imageSearch()">Search</button><br>
+      <input type="search" v-model="imageSearchInput" name="image-search" placeholder="Search for an image…" @keyup.enter="imageSearch()"/><br>
+      <button type="button" @click.prevent="imageSearch()">Search</button>
+      <button type="button">Upload</button>
+      <button type="button" @click.prevent="getActiveSMGroup()">Post</button><br>
       <img v-if="randomImagePath" :src="randomImagePath" alt="random-image">
     `,
+
+  props: ['accessToken'],
 
   data() {
     return {
@@ -54,6 +58,26 @@ export default {
           const randomImage = Math.floor(Math.random() * (max - 1 + 1) + 1);
           this.randomImagePath =
             imageSearchJSON.photos[randomImage].src['landscape'];
+        }
+      } catch (error) {
+        console.log(error.toString());
+      }
+    },
+
+    async getActiveSMGroup() {
+      try {
+        const response = await fetch(
+          servrURL + 'controller/socialmedia.php?active=true',
+          {
+            method: 'GET',
+            headers: {
+              Authorization: this.accessToken,
+            },
+          }
+        );
+        const ActiveSMGroupJSON = await response.json();
+        if (ActiveSMGroupJSON) {
+          console.log(ActiveSMGroupJSON.data);
         }
       } catch (error) {
         console.log(error.toString());

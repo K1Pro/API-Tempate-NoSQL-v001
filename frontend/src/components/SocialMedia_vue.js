@@ -19,6 +19,15 @@ export default {
     <div class="tabcontent">
       <h2>{{ chosenSocialMedia }}<input type="checkbox" id="active" v-model="active" @click="patchSocialMedia" /></h2>
 
+      <b><label for="accesstoken">Access Token:</label></b><br>
+      <input type="text" id="accesstoken" v-model="accesstoken" @change="patchSocialMedia"><br><br>
+
+      <b><label for="accesstokenexpiry">Access Token Expiry:</label></b><br>
+      <input type="datetime-local" id="accesstokenexpiry" :value="accesstokenexpiry" @change="patchSocialMedia"><br><br>
+
+      <b><label for="accesstokensecret">Access Token Secret:</label></b><br>
+      <input type="text" id="accesstokensecret" v-model="accesstokensecret" @change="patchSocialMedia"><br><br>
+
       <b><label for="appid">App ID:</label></b><br>
       <input type="text" id="appid" v-model="appid" @change="patchSocialMedia"><br><br>
 
@@ -37,14 +46,11 @@ export default {
       <b><label for="clientsecret">Client Secret:</label></b><br>
       <input type="text" id="clientsecret" v-model="clientsecret" @change="patchSocialMedia"><br><br>
 
-      <b><label for="accesstoken">Access Token:</label></b><br>
-      <input type="text" id="accesstoken" v-model="accesstoken" @change="patchSocialMedia"><br><br>
-
-      <b><label for="accesstokenexpiry">Access Token Expiry:</label></b><br>
-      <input type="datetime-local" id="accesstokenexpiry" :value="accesstokenexpiry" @change="patchSocialMedia"><br><br>
-
       <b><label for="accesstokensecret">Access Token Secret:</label></b><br>
       <input type="text" id="accesstokensecret" v-model="accesstokensecret" @change="patchSocialMedia"><br><br>
+
+      <b><label for="urn">URN:</label></b><br>
+      <input type="text" id="urn" v-model="urn" @change="patchSocialMedia"><br><br>
     </div>
   `,
 
@@ -53,15 +59,16 @@ export default {
   data() {
     return {
       chosenSocialMedia: 'Facebook',
+      accesstoken: '',
+      accesstokenexpiry: '',
+      accesstokensecret: '',
       appid: '',
       apikey: '',
       apikeysecret: '',
       bearertoken: '',
       clientid: '',
       clientsecret: '',
-      accesstoken: '',
-      accesstokenexpiry: '',
-      accesstokensecret: '',
+      urn: '',
       active: false,
     };
   },
