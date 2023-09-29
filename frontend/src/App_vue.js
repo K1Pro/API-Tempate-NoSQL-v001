@@ -19,10 +19,10 @@ export default {
       <logoutbtn :accessToken="accessToken" :sessionID="sessionID" @logout="updateAccessToken" @logout-msg="updateSnackbar">></logoutbtn>
       <div class="grid-container">
         <div class="item1">
-          <socialmedia :accessToken="accessToken"></socialmedia>
+          <socialmedia :accessToken="accessToken" @socialmedia-msg="updateSnackbar"></socialmedia>
         </div>
         <div class="item2">
-          <post :accessToken="accessToken"></post>
+          <post :accessToken="accessToken" @post-msg="updateSnackbar"></post>
         </div>
         <div class="item3">
           <accountinfo :userData="userData"></accountinfo>

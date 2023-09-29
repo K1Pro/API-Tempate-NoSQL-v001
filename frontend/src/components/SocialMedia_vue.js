@@ -56,6 +56,8 @@ export default {
 
   props: ['accessToken'],
 
+  emits: ['socialmedia-msg'],
+
   data() {
     return {
       chosenSocialMedia: 'Facebook',
@@ -99,9 +101,11 @@ export default {
         });
         const patchSocialMediaJSON = await response.json();
         if (patchSocialMediaJSON.success) {
+          this.$emit('socialmedia-msg', patchSocialMediaJSON.messages[0]);
         }
       } catch (error) {
         this.error = error.toString();
+        this.$emit('socialmedia-msg', this.error);
       }
     },
 

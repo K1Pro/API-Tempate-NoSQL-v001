@@ -14,6 +14,8 @@ export default {
 
   props: ['accessToken'],
 
+  emits: ['post-msg'],
+
   data() {
     return {
       imageSearchInput: '',
@@ -76,11 +78,15 @@ export default {
           }
         );
         const ActiveSMGroupJSON = await response.json();
-        if (ActiveSMGroupJSON) {
-          console.log(ActiveSMGroupJSON.data);
+        if (ActiveSMGroupJSON.success) {
+          console.log(ActiveSMGroupJSON.data.sm_group);
+          ActiveSMGroupJSON.data.sm_group.forEach((sm_website) => {
+            console.log(sm_website.website);
+          });
+          this.$emit('post-msg', 'Posting to social media websites...');
         }
       } catch (error) {
-        console.log(error.toString());
+        this.$emit('post-msg', error.toString());
       }
     },
   },
